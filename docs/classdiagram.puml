@@ -1,0 +1,139 @@
+@startuml
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+hide circle
+
+class Session{
+	- day : DayOfWeek
+	- time : TimeOfDay
+	- duration : Duration
+	- name : String
+	- section : String
+	- venue : String
+
+	+ getDay() : DayOfWeek
+	+ getTime() : TimeOfDay
+	+ getDuration() : Duration
+	+ getName() : String
+	+ getSection() : String
+	+ getVenue() : String
+
+	+ setDay(val : DayOfWeek) : DayOfWeek
+	+ setTime(val : TimeOfDay) : TimeOfDay
+	+ setDuration(val : Duration) : Duration
+	+ setName(val : String) : String
+	+ setSection(val : String) : String
+	+ setVenue(val : String) : String
+}
+
+abstract class Criterion{
+	+ {abstract} validate(sessions : List<Session>) : boolean
+	+ {abstract} validate(session : Session) : boolean
+}
+
+Criterion -- Session : isAppliedTo
+
+abstract class CourseCriterion extends Criterion{
+	# course : String
+	CourseCriterion(course : String)
+	+ {abstract} validate(sessions : List<Session>) : boolean
+	+ {abstract} validate(session : Session) : boolean
+}
+
+abstract class SectionCriterion extends Criterion{
+	# section : String
+	SectionCriterion(section : String)
+	+ {abstract} validate(sessions : List<Session>) : boolean
+	+ {abstract} validate(session : Session) : boolean
+}
+
+class CourseInclCriterion extends CourseCriterion{
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+class CourseExclCriterion extends CourseCriterion{
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+class SectionInclCriterion extends SectionCriterion{
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+class SectionExclCriterion extends SectionCriterion{
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+abstract class DayCriterion extends Criterion{
+	# day : DayOfWeek
+	DayCriterion(day : DayOfWeek)
+	+ {abstract} validate(sessions : List<Session>) : boolean
+	+ {abstract} validate(session : Session) : boolean
+}
+
+class DayInclCriterion extends DayCriterion{
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+class DayExclCriterion extends DayCriterion{
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+class TimeCriterion extends Criterion{
+	# start : TimeOfDay
+	# end : TimeOfDay
+	+ TimeCriterion(start : TimeOfDay, end : TimeOfDay)
+	+ {abstract} validate(sessions : List<Session>) : boolean
+	+ {abstract} validate(session : Session) : boolean
+}
+
+class TimeInclCriterion extends TimeCriterion{
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+class TimeExclCriterion extends TimeCriterion{
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+class AndCriterion extends Criterion{
+	- criteria : List<Criterion>
+	+ AndCriterion(criteria : List<Criterion>)
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+AndCriterion o-- Criterion
+
+class OrCriterion extends Criterion{
+	- criteria : List<Criterion>
+	+ OrCriterion(criteria : List<Criterion>)
+	+ validate(sessions : List<Session>) : boolean
+	+ validate(session : Session) : boolean
+}
+
+OrCriterion o-- Criterion
+
+class Filter{
+	- criterion : Criterion
+	+ Filter(criterion : Criterion)
+	+ filter(sessions : List<Session>) : List<Session>
+}
+
+Filter o-- Criterion
+
+class Combinator{
+	- criterion : Criterion
+	+ Combinator(criterion : Criterion)
+	+ combinations(sessions : List<Session>) : List<List<Sessions>>
+}
+
+Combinator o-- Criterion
+
+@enduml
