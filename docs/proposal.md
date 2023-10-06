@@ -37,3 +37,7 @@ offline as well.
 * 6 Shall provide a intuitive Graphical User Interface
 * 7 Shall run on at least Linux and Windows
 * 8 Shall alert user when a new schedule has been released, that affects them
+
+## GitHub Repo:
+
+[https://github.com/Nafees10/slowport](https://github.com/Nafees10/slowport)
