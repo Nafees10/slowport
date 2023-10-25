@@ -37,6 +37,12 @@ offline as well.
 * 6 Shall provide a intuitive Graphical User Interface
 * 7 Shall run on at least Linux and Windows
 * 8 Shall alert user when a new schedule has been released, that affects them
+	* 8.1 Shall alert user via native OS notification system
+* Shall display version delta for different version timetables
+* Shall allow user to attach notes to class sessions
+* Shall use an API for makeup classes list
+* Shall provide a button to instantly trigger a API call for immediate schedule
+	update
 
 ## GitHub Repo:
 
