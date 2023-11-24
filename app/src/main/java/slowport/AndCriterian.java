@@ -1,27 +1,27 @@
 import java.util.List;
-public class OrCriterion extends Criterion {
+public class AndCriterian extends Criterion {
     private List<Criterion> criteria;
 
-    public OrCriterion(List<Criterion> criteria) {
+    public AndCriterian(List<Criterion> criteria) {
         this.criteria = criteria;
     }
-
+    
     public boolean validdate(Session session) {
         for (Criterion criterion : criteria) {
-            if (criterion.validdate(session)) {
-                return true;
+            if (!criterion.validdate(session)) {
+                return false;
             }
         }
-        return false;
-    }
-    public boolean validdate(List<Session> sessions) {
-        for (Criterion criterion : criteria) {
-            if (criterion.validdate(sessions)) {
-                return true;
-            }
-        }
-        return false;
+        return true;
     }
 
-    
+    public boolean validdate(List<Session> sessions) {
+        for (Criterion criterion : criteria) {
+            if (!criterion.validdate(sessions)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

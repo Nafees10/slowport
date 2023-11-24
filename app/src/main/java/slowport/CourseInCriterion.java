@@ -1,10 +1,11 @@
 import java.util.List;
 
-public class CourseExclCriterion extends CourseCriterion {
-    public CourseExclCriterion(String course) {
+public class CourseInCriterion extends CourseCriterion {
+    public CourseInCriterion(String course) {
         super(course);
     }
-        public boolean validdate(Session session) {
+    
+    public boolean validdate(Session session) {
         return true;
     }
     
