@@ -1,27 +1,27 @@
-import java.util.List;
+package slowport;
+
+import java.util.*;
+
 public class OrCriterion extends Criterion {
-    private List<Criterion> criteria;
+	private List<Criterion> criteria;
 
-    public OrCriterion(List<Criterion> criteria) {
-        this.criteria = criteria;
-    }
+	public OrCriterion(List<Criterion> criteria) {
+		this.criteria = criteria;
+	}
 
-    public boolean validdate(Session session) {
-        for (Criterion criterion : criteria) {
-            if (criterion.validdate(session)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public boolean validdate(List<Session> sessions) {
-        for (Criterion criterion : criteria) {
-            if (criterion.validdate(sessions)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	public List<Criterion> getCriteria() {
+		return criteria;
+	}
 
-    
+	public void setCriteria(List<Criterion> criteria) {
+		this.criteria = criteria;
+	}
+
+	public boolean validate(Session session) {
+		for (Criterion criterion : criteria) {
+			if (criterion.validate(session))
+				return true;
+		}
+		return false;
+	}
 }

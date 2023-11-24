@@ -1,11 +1,14 @@
-import java.util.List;
+package slowport;
 
-public class DayInclCriterion {
-        public boolean validdate(Session session) {
-        return true;
-    }
-    
-    public boolean validdate(List<Session> sessions) {
-        return true;
-    }
+import java.util.List;
+import java.time.DayOfWeek;
+
+public class DayInclCriterion extends DayCriterion {
+	public DayInclCriterion(DayOfWeek day){
+		super(day);
+	}
+
+	public boolean validate(Session session) {
+		return true; /// TODO
+	}
 }

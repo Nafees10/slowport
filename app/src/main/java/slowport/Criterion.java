@@ -1,10 +1,14 @@
+package slowport;
+
 import java.util.List;
-public class Criterion {
-    public boolean validdate(Session session) {
-        return true;
-    }
-    
-    public boolean validdate(List<Session> sessions) {
-        return true;
-    }
+
+public abstract class Criterion {
+	public abstract boolean validate(Session session);
+	public final boolean validate(List<Session> sessions){
+		for (Session session : sessions){
+			if (!validate(session))
+				return false;
+		}
+		return true;
+	}
 }

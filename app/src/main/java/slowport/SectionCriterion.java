@@ -1,17 +1,17 @@
-import java.util.List;
+package slowport;
 
-public class SectionCriterion extends Criterion {
+public abstract class SectionCriterion extends Criterion {
+	private String section;
 
-    private String section;
+	public SectionCriterion(String section) {
+		this.section = section;
+	}
 
-    public SectionCriterion(String section) {
-        this.section = section;
-    }
-        public boolean validdate(Session session) {
-        return true;
-    }
-    
-    public boolean validdate(List<Session> sessions) {
-        return true;
-    }
+	public String getSection() {
+		return section;
+	}
+
+	public void setSection(String section) {
+		this.section = section;
+	}
 }
