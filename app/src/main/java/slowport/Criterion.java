@@ -1,6 +1,6 @@
 package slowport;
 
-import java.util.List;
+import java.util.*;
 
 public abstract class Criterion {
 	public abstract boolean validate(Session session);

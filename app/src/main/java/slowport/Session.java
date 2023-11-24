@@ -1,8 +1,6 @@
 package slowport;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalTime;
+import java.time.*;
 
 public class Session {
 	private DayOfWeek day;

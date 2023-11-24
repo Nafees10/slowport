@@ -1,6 +1,6 @@
 package slowport;
 
-import java.util.List;
+import java.util.*;
 
 public class AndCriterion extends Criterion {
 	private List<Criterion> criteria;
@@ -24,5 +24,4 @@ public class AndCriterion extends Criterion {
 	public void setCriteria(List<Criterion> criteria) {
 		this.criteria = criteria;
 	}
-
 }

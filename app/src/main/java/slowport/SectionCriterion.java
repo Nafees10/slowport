@@ -1,6 +1,6 @@
 package slowport;
 
-public abstract class SectionCriterion extends Criterion {
+public class SectionCriterion extends Criterion {
 	private String section;
 
 	public SectionCriterion(String section) {
@@ -13,5 +13,9 @@ public abstract class SectionCriterion extends Criterion {
 
 	public void setSection(String section) {
 		this.section = section;
+	}
+
+	public boolean validate(Session session){
+		return true; /// TODO
 	}
 }

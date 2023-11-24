@@ -1,8 +1,8 @@
 package slowport;
 
-import java.time.LocalTime;
+import java.time.*;
 
-public abstract class TimeCriterion extends Criterion{
+public class TimeCriterion extends Criterion{
 	private LocalTime start;
 	private LocalTime end;
 
@@ -27,4 +27,7 @@ public abstract class TimeCriterion extends Criterion{
 		this.end = end;
 	}
 
+	public boolean validate(Session session){
+		return true; /// TODO
+	}
 }

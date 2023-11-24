@@ -1,6 +1,6 @@
 package slowport;
 
-public abstract class CourseCriterion extends Criterion{
+public class CourseCriterion extends Criterion{
 	private String course;
 
 	public CourseCriterion(String course) {
@@ -9,6 +9,10 @@ public abstract class CourseCriterion extends Criterion{
 
 	public String getCourse() {
 		return course;
+	}
+
+	public boolean validate(Session session){
+		return true; /// TODO
 	}
 
 	public void setCourse(String course) {

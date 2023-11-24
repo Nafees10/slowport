@@ -1,12 +1,15 @@
 package slowport;
 
-import java.time.DayOfWeek;
-import java.util.List;
+import java.time.*;
 
-public abstract class DayCriterion extends Criterion {
+public class DayCriterion extends Criterion {
 	DayOfWeek day;
 
 	public DayCriterion(DayOfWeek day) {
 		this.day = day;
+	}
+
+	public boolean validate(Session session){
+		return true; /// TODO
 	}
 }

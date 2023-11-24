@@ -1,6 +1,6 @@
 package slowport;
 
-import java.util.List;
+import java.util.*;
 
 public class Combinator {
 	private Criterion criterion;
