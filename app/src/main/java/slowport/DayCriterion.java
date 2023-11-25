@@ -10,6 +10,8 @@ public class DayCriterion extends Criterion {
 	}
 
 	public boolean validate(Session session){
-		return true; /// TODO
+		if (session == null)
+			return false;
+		return session.getDay().equals(day);
 	}
 }
