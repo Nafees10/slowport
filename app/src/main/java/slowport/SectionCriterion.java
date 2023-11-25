@@ -16,6 +16,8 @@ public class SectionCriterion extends Criterion {
 	}
 
 	public boolean validate(Session session){
-		return true; /// TODO
+		if (session == null)
+			return false;
+		return session.getSection().equals(section);
 	}
 }

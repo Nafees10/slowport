@@ -12,7 +12,9 @@ public class CourseCriterion extends Criterion{
 	}
 
 	public boolean validate(Session session){
-		return true; /// TODO
+		if (session == null)
+			return false;
+		return session.getName().equals(course);
 	}
 
 	public void setCourse(String course) {
