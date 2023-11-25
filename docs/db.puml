@@ -1,0 +1,17 @@
+@startuml
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+hide circle
+
+class Session{
+	- day : DayOfWeek
+	- time : TimeOfDay
+	- duration : Duration
+	- name : String
+	- section : String
+	- venue : String
+
+	+ ..
+}
+
+@enduml
