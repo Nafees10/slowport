@@ -3,15 +3,73 @@ skinparam linetype ortho
 skinparam classAttributeIconSize 0
 hide circle
 
-class Session{
-	- day : DayOfWeek
-	- time : TimeOfDay
-	- duration : Duration
-	- name : String
-	- section : String
-	- venue : String
+package "slowport.db"{
+	class Note{
+		- week : YearWeek
+		- course : String
+		- section : String
+		- sessionIndex : int
+		- note : String
+		+ Node(week : YearWeek, course : String, section : String,\
+		sessionIndex : int, note : String)
+		+ getWeek() : YearWeek
+		+ getCourse() : String
+		+ getSection() : String
+		+ getSessionIndex() : int
+		+ getNote() : String
+	}
 
-	+ ..
+	class Connector{
+		- {static} filename() : String
+		+ {static} connect() : Connection
+	}
+
+	class TimetableDB{
+		- {static} queryGetVersions : String
+		- {static} queryGetTimetable : String
+		- {static} queryAddTimetable : String
+		- conn : Connection
+		- stmntGetVersions : PreparedStatement
+		- stmntGetTimetable : PreparedStatement
+		- stmntAddTimetable : PreparedStatement
+		- sessions : Map<String, List<Session>>
+		+ TimetableDB(conn : Connection)
+		+ getVersions() : List<String>
+		+ getTimetable(version : String) : String
+		+ getSessions(version : String) : List<Session>
+		+ addTimetable(version : String, timetable : String) : void
+	}
+
+	class SelectionDB{
+		- {static} queryGetSelections : String
+		- {static} queryRemoveSelection : String
+		- {static} queryAddSelection : String
+		- conn : Connection
+		- timetableStore : TimetableDB
+		- stmntGetSelections : PreparedStatement
+		- stmntRemoveSelection : PreparedStatement
+		- stmntAddSelection : PreparedStatement
+		+ SelectionDB(conn : Connection)
+		+ getSelected(version : String) : List<Session>
+		+ addSelected(session : Session) : void
+		+ removeSelected(session : Session) : void
+	}
+
+	class NoteDB{
+		- {static} queryGetNotes : String
+		- {static} queryGetNotesByCourseSection : String
+		- {static} queryAddNote : String
+		- conn : Connection
+		- stmntGetNotes : PreparedStatement
+		- stmntGetNotesByCourseSection : PreparedStatement
+		- stmntAddNote : PreparedStatement
+		+ NoteDB(conn : Connection)
+		+ getNotes() : List<Note>
+		+ getNote(String course, String section) : List<Note>
+		+ addNote(note : Note) : void
+		+ removeNote(note : Note) : void
+	}
 }
+
 
 @enduml
