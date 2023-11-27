@@ -3,137 +3,225 @@ skinparam linetype ortho
 skinparam classAttributeIconSize 0
 hide circle
 
-class Session{
-	- day : DayOfWeek
-	- time : TimeOfDay
-	- duration : Duration
-	- name : String
-	- section : String
-	- venue : String
+package "slowport"{
+	class Session{
+		- day : DayOfWeek
+		- time : TimeOfDay
+		- duration : Duration
+		- name : String
+		- section : String
+		- venue : String
+		- index : int
+		- isRecurring : boolean
+		- week : YearWeek
 
-	+ getDay() : DayOfWeek
-	+ getTime() : TimeOfDay
-	+ getDuration() : Duration
-	+ getName() : String
-	+ getSection() : String
-	+ getVenue() : String
+		+ getDay() : DayOfWeek
+		+ getTime() : TimeOfDay
+		+ getDuration() : Duration
+		+ getName() : String
+		+ getSection() : String
+		+ getVenue() : String
+		+ getIndex() : int
+		+ getIsRecurring() : boolean
+		+ getWeek() : YearWeek
+		+ setDay(val : DayOfWeek) : void
+		+ setTime(val : TimeOfDay) : void
+		+ setDuration(val : Duration) : void
+		+ setName(val : String) : void
+		+ setSection(val : String) : void
+		+ setVenue(val : String) : void
+		+ setIndex(val : int) : void
+		+ setIsRecurring(val : boolean) : void
+		+ setWeek(val : YearWeek) : void
+	}
 
-	+ setDay(val : DayOfWeek) : DayOfWeek
-	+ setTime(val : TimeOfDay) : TimeOfDay
-	+ setDuration(val : Duration) : Duration
-	+ setName(val : String) : String
-	+ setSection(val : String) : String
-	+ setVenue(val : String) : String
+	class Note{
+		- week : YearWeek
+		- course : String
+		- section : String
+		- sessionIndex : int
+		- note : String
+		+ Node(week : YearWeek, course : String, section : String,\
+		sessionIndex : int, note : String)
+		+ getWeek() : YearWeek
+		+ getCourse() : String
+		+ getSection() : String
+		+ getSessionIndex() : int
+		+ getNote() : String
+	}
+
+	Note -- Session
+
+	abstract class Criterion{
+		+ {abstract} validate(sessions : List<Session>) : boolean
+		+ {abstract} validate(session : Session) : boolean
+	}
+
+	Criterion -- Session : isAppliedTo
+
+	abstract class CourseCriterion extends Criterion{
+		# course : String
+		CourseCriterion(course : String)
+		+ {abstract} validate(sessions : List<Session>) : boolean
+		+ {abstract} validate(session : Session) : boolean
+	}
+
+	abstract class SectionCriterion extends Criterion{
+		# section : String
+		SectionCriterion(section : String)
+		+ {abstract} validate(sessions : List<Session>) : boolean
+		+ {abstract} validate(session : Session) : boolean
+	}
+
+	class CourseInclCriterion extends CourseCriterion{
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	class CourseExclCriterion extends CourseCriterion{
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	class SectionInclCriterion extends SectionCriterion{
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	class SectionExclCriterion extends SectionCriterion{
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	abstract class DayCriterion extends Criterion{
+		# day : DayOfWeek
+		DayCriterion(day : DayOfWeek)
+		+ {abstract} validate(sessions : List<Session>) : boolean
+		+ {abstract} validate(session : Session) : boolean
+	}
+
+	class DayInclCriterion extends DayCriterion{
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	class DayExclCriterion extends DayCriterion{
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	class TimeCriterion extends Criterion{
+		# start : TimeOfDay
+		# end : TimeOfDay
+		+ TimeCriterion(start : TimeOfDay, end : TimeOfDay)
+		+ {abstract} validate(sessions : List<Session>) : boolean
+		+ {abstract} validate(session : Session) : boolean
+	}
+
+	class TimeInclCriterion extends TimeCriterion{
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	class TimeExclCriterion extends TimeCriterion{
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	class AndCriterion extends Criterion{
+		- criteria : List<Criterion>
+		+ AndCriterion(criteria : List<Criterion>)
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	AndCriterion o-- Criterion
+
+	class OrCriterion extends Criterion{
+		- criteria : List<Criterion>
+		+ OrCriterion(criteria : List<Criterion>)
+		+ validate(sessions : List<Session>) : boolean
+		+ validate(session : Session) : boolean
+	}
+
+	OrCriterion o-- Criterion
+
+	class Filter{
+		- criterion : Criterion
+		+ Filter(criterion : Criterion)
+		+ filter(sessions : List<Session>) : List<Session>
+	}
+
+	Filter o-- Criterion
+
+	class Combinator{
+		- criterion : Criterion
+		+ Combinator(criterion : Criterion)
+		+ combinations(sessions : List<Session>) : List<List<Sessions>>
+	}
+
+	Combinator o-- Criterion
+
+
+	package "db"{
+		class Connector{
+			- {static} filename() : String
+			+ {static} connect() : Connection
+		}
+
+		class TimetableDB{
+			- {static} queryGetVersions : String
+			- {static} queryGetTimetable : String
+			- {static} queryAddTimetable : String
+			- conn : Connection
+			- stmntGetVersions : PreparedStatement
+			- stmntGetTimetable : PreparedStatement
+			- stmntAddTimetable : PreparedStatement
+			- sessions : Map<String, List<Session>>
+			+ TimetableDB(conn : Connection)
+			+ getVersions() : List<String>
+			+ getTimetable(version : String) : String
+			+ getSessions(version : String) : List<Session>
+			+ addTimetable(version : String, timetable : String) : void
+		}
+
+		TimetableDB -- Session : //Manages//
+
+		class SelectionDB{
+			- {static} queryGetSelections : String
+			- {static} queryRemoveSelection : String
+			- {static} queryAddSelection : String
+			- conn : Connection
+			- timetableStore : TimetableDB
+			- stmntGetSelections : PreparedStatement
+			- stmntRemoveSelection : PreparedStatement
+			- stmntAddSelection : PreparedStatement
+			+ SelectionDB(conn : Connection)
+			+ getSelected(version : String) : List<Session>
+			+ addSelected(session : Session) : void
+			+ removeSelected(session : Session) : void
+		}
+
+		SelectionDB o- TimetableDB
+		SelectionDB -- Session : //Manages//
+
+		class NoteDB{
+			- {static} queryGetNotes : String
+			- {static} queryGetNotesByCourseSection : String
+			- {static} queryAddNote : String
+			- conn : Connection
+			- stmntGetNotes : PreparedStatement
+			- stmntGetNotesByCourseSection : PreparedStatement
+			- stmntAddNote : PreparedStatement
+			+ NoteDB(conn : Connection)
+			+ getNotes() : List<Note>
+			+ getNote(String course, String section) : List<Note>
+			+ addNote(note : Note) : void
+			+ removeNote(note : Note) : void
+		}
+
+		NoteDB -- Note : //Manages//
+	}
 }
-
-abstract class Criterion{
-	+ {abstract} validate(sessions : List<Session>) : boolean
-	+ {abstract} validate(session : Session) : boolean
-}
-
-Criterion -- Session : isAppliedTo
-
-abstract class CourseCriterion extends Criterion{
-	# course : String
-	CourseCriterion(course : String)
-	+ {abstract} validate(sessions : List<Session>) : boolean
-	+ {abstract} validate(session : Session) : boolean
-}
-
-abstract class SectionCriterion extends Criterion{
-	# section : String
-	SectionCriterion(section : String)
-	+ {abstract} validate(sessions : List<Session>) : boolean
-	+ {abstract} validate(session : Session) : boolean
-}
-
-class CourseInclCriterion extends CourseCriterion{
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-class CourseExclCriterion extends CourseCriterion{
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-class SectionInclCriterion extends SectionCriterion{
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-class SectionExclCriterion extends SectionCriterion{
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-abstract class DayCriterion extends Criterion{
-	# day : DayOfWeek
-	DayCriterion(day : DayOfWeek)
-	+ {abstract} validate(sessions : List<Session>) : boolean
-	+ {abstract} validate(session : Session) : boolean
-}
-
-class DayInclCriterion extends DayCriterion{
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-class DayExclCriterion extends DayCriterion{
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-class TimeCriterion extends Criterion{
-	# start : TimeOfDay
-	# end : TimeOfDay
-	+ TimeCriterion(start : TimeOfDay, end : TimeOfDay)
-	+ {abstract} validate(sessions : List<Session>) : boolean
-	+ {abstract} validate(session : Session) : boolean
-}
-
-class TimeInclCriterion extends TimeCriterion{
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-class TimeExclCriterion extends TimeCriterion{
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-class AndCriterion extends Criterion{
-	- criteria : List<Criterion>
-	+ AndCriterion(criteria : List<Criterion>)
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-AndCriterion o-- Criterion
-
-class OrCriterion extends Criterion{
-	- criteria : List<Criterion>
-	+ OrCriterion(criteria : List<Criterion>)
-	+ validate(sessions : List<Session>) : boolean
-	+ validate(session : Session) : boolean
-}
-
-OrCriterion o-- Criterion
-
-class Filter{
-	- criterion : Criterion
-	+ Filter(criterion : Criterion)
-	+ filter(sessions : List<Session>) : List<Session>
-}
-
-Filter o-- Criterion
-
-class Combinator{
-	- criterion : Criterion
-	+ Combinator(criterion : Criterion)
-	+ combinations(sessions : List<Session>) : List<List<Sessions>>
-}
-
-Combinator o-- Criterion
 
 @enduml
