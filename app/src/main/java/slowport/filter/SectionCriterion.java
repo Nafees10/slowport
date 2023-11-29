@@ -1,4 +1,6 @@
-package slowport;
+package slowport.filter;
+
+import slowport.common.*;
 
 public class SectionCriterion extends Criterion {
 	private String section;

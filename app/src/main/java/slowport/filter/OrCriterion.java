@@ -1,6 +1,7 @@
-package slowport;
+package slowport.filter;
 
 import java.util.*;
+import slowport.common.*;
 
 public class OrCriterion extends Criterion {
 	private List<Criterion> criteria;

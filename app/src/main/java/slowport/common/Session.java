@@ -1,4 +1,4 @@
-package slowport;
+package slowport.common;
 
 import java.time.*;
 import java.time.format.*;

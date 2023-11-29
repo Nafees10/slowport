@@ -1,4 +1,6 @@
-package slowport;
+package slowport.filter;
+
+import slowport.common.*;
 
 public class NotCriterion extends Criterion {
 	Criterion criterion;

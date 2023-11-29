@@ -1,6 +1,7 @@
-package slowport;
+package slowport.filter;
 
 import java.time.*;
+import slowport.common.*;
 
 public class TimeCriterion extends Criterion{
 	private LocalTime start;
