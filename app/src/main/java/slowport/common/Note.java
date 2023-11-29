@@ -1,6 +1,6 @@
 package slowport.common;
 
-class Note{
+public class Note{
 	private int week;
 	private String course;
 	private int sessionIndex;
