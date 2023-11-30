@@ -40,7 +40,6 @@ package "slowport"{
 		class Note{
 			- week : YearWeek
 			- course : String
-			- section : String
 			- sessionIndex : int
 			- note : String
 			+ Node(week : YearWeek, course : String, section : String,\
@@ -173,7 +172,7 @@ package "slowport"{
 
 		class NoteDB{
 			- {static} queryGetNotes : String
-			- {static} queryGetNotesByCourseSection : String
+			- {static} queryGetNotesByCourse : String
 			- {static} queryAddNote : String
 			- conn : Connection
 			- stmntGetNotes : PreparedStatement
@@ -181,7 +180,7 @@ package "slowport"{
 			- stmntAddNote : PreparedStatement
 			+ NoteDB(conn : Connection)
 			+ getNotes() : List<Note>
-			+ getNote(String course, String section) : List<Note>
+			+ getNotes(String course) : List<Note>
 			+ addNote(note : Note) : void
 			+ removeNote(note : Note) : void
 		}
