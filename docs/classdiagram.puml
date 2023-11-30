@@ -163,8 +163,8 @@ package "slowport"{
 			- stmntAddSelection : PreparedStatement
 			+ SelectionDB(conn : Connection)
 			+ getSelected(version : String) : List<Session>
-			+ addSelected(session : Session) : void
-			+ removeSelected(session : Session) : void
+			+ addSelected(session : Session) : boolean
+			+ removeSelected(session : Session) : boolean
 		}
 
 		SelectionDB o- TimetableDB
@@ -181,8 +181,8 @@ package "slowport"{
 			+ NoteDB(conn : Connection)
 			+ getNotes() : List<Note>
 			+ getNotes(String course) : List<Note>
-			+ addNote(note : Note) : void
-			+ removeNote(note : Note) : void
+			+ addNote(note : Note) : boolean
+			+ removeNote(note : Note) : boolean
 		}
 
 		NoteDB -- Note : //Manages//
