@@ -1,5 +1,6 @@
 package slowport.common;
 
+import java.util.*;
 import java.time.*;
 import java.time.format.*;
 
@@ -57,6 +58,18 @@ public class Session {
 					e.getMessage());
 		}
 		return null;
+	}
+
+	public static List<Session> deserializeAll(String str){
+		List<Session> ret = new ArrayList<>();
+		String[] lines = str.split("\n");
+		for (String line : lines){
+			Session session = Session.deserialize(line);
+			if (session == null)
+				return null;
+			ret.add(session);
+		}
+		return ret;
 	}
 
 	public DayOfWeek getDay() {
