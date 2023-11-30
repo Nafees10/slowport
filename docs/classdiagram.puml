@@ -35,6 +35,9 @@ package "slowport"{
 			+ setIndex(val : int) : void
 			+ setIsRecurring(val : boolean) : void
 			+ setWeek(val : YearWeek) : void
+			+ deserialize(val : String) : Session
+			+ deserializeAll(val : String) : List<Session>
+			+ toString() : String
 		}
 
 		class Note{
