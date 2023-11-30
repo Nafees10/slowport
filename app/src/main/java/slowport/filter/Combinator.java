@@ -1,24 +1,28 @@
-package slowport.filter;
-
-import java.util.*;
-import slowport.common.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Combinator {
-	private Criterion criterion;
+    private Criterion criterion;
 
-	public Combinator(Criterion criterion) {
-		this.criterion = criterion;
-	}
+    public Combinator(Criterion criterion) {
+        this.criterion = criterion;
+    }
 
-	public Criterion getCriterion() {
-		return criterion;
-	}
+    public List<List<Session>> combinations(List<Session> sessions) {
+        List<List<Session>> result = new ArrayList<>();
+        int totalSessions = sessions.size();
+        int totalCombinations = 1 << totalSessions; // 2^totalSessions
 
-	public void setCriterion(Criterion criterion) {
-		this.criterion = criterion;
-	}
+        for (int i = 0; i < totalCombinations; i++) {
+            List<Session> currentCombination = new ArrayList<>();
+            for (int j = 0; j < totalSessions; j++) {
+                if ((i & (1 << j)) != 0) {
+                    currentCombination.add(sessions.get(j));
+                }
+            }
+            result.add(currentCombination);
+        }
 
-	List<List<Session>> combinations(List<Session> sessions) {
-		return null; // TODO write combinator
-	}
+        return result;
+    }
 }
