@@ -5,14 +5,11 @@ import java.util.*;
 import slowport.common.*;
 
 public class DayRater extends Rater{
-	public int rate(List<Session> sessions){
+	public int rate(Timetable timetable){
 		Map<DayOfWeek, Boolean> dayStatus = new HashMap<>();
-		for (Session session : sessions)
+		for (Session session : timetable.getSessions())
 			dayStatus.put(session.getDay(), true);
 		int days = dayStatus.size();
-		if (days > 7) // HOW??
-			return 0;
-		days = 7 - days;
-		return days * (1000 / 7);
+		return days * 1000 / 7;
 	}
 }
