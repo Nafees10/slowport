@@ -15,6 +15,19 @@ public class Session {
 	private boolean recurring;
 	private YearWeek week;
 
+	private static DayOfWeek parseDay(String day) throws Exception{
+		switch (day){
+			case "mon": return DayOfWeek.MONDAY;
+			case "tue": return DayOfWeek.TUESDAY;
+			case "wed": return DayOfWeek.WEDNESDAY;
+			case "thu": return DayOfWeek.THURSDAY;
+			case "fri": return DayOfWeek.FRIDAY;
+			case "sat": return DayOfWeek.SATURDAY;
+			case "sun": return DayOfWeek.SUNDAY;
+			default: throw new Exception("Invalid day `" + day + "`");
+		}
+	}
+
 	public Session(DayOfWeek day, LocalTime time, Duration duration, String name,
 			String section, String venue) {
 		this.day = day;
@@ -62,29 +75,35 @@ public class Session {
 	public static Session deserialize(String str){
 		if (str == null)
 			return null;
-		str = str.strip();
-		String[] strs = str.split("\t");
+		String[] strs = str.strip().split("\t");
 		if (strs.length != 6)
 			return null;
 		try{
-			String name = strs[0],
-			section = strs[1],
-			venue = strs[2];
-			DayOfWeek day;
-			switch (strs[3]){
-				case "mon": day = DayOfWeek.MONDAY; break;
-				case "tue": day = DayOfWeek.TUESDAY; break;
-				case "wed": day = DayOfWeek.WEDNESDAY; break;
-				case "thu": day = DayOfWeek.THURSDAY; break;
-				case "fri": day = DayOfWeek.FRIDAY; break;
-				case "sat": day = DayOfWeek.SATURDAY; break;
-				case "sun": day = DayOfWeek.SUNDAY; break;
-				default: throw new Exception("Invalid day `" + strs[3] + "`");
-			}
+			DayOfWeek day = parseDay(strs[3]);
 			LocalTime time = LocalTime.parse(strs[4],
 					DateTimeFormatter.ofPattern("HHmmss"));
 			Duration dur = Duration.ofMinutes(Integer.parseInt(strs[5]));
-			return new Session(day, time, dur, name, section, venue);
+			return new Session(day, time, dur, strs[0], strs[1], strs[2]);
+		} catch (Exception e){
+			System.out.println("Error deserializing Session:\n\t" + str + "\n" +
+					e.getMessage());
+		}
+		return null;
+	}
+
+	public static Session deserializeMakeup(String str){
+		if (str == null)
+			return null;
+		String[] strs = str.strip().split("\t");
+		if (strs.length != 7)
+			return null;
+		try{
+			DayOfWeek day = parseDay(strs[3]);
+			LocalTime time = LocalTime.parse(strs[4],
+					DateTimeFormatter.ofPattern("HHmmss"));
+			Duration dur = Duration.ofMinutes(Integer.parseInt(strs[5]));
+			YearWeek week = new YearWeek(strs[6]);
+			return new Session(day, time, dur, strs[0], strs[1], strs[2], week);
 		} catch (Exception e){
 			System.out.println("Error deserializing Session:\n\t" + str + "\n" +
 					e.getMessage());
@@ -96,7 +115,20 @@ public class Session {
 		List<Session> ret = new ArrayList<>();
 		String[] lines = str.split("\n");
 		for (String line : lines){
+			/// TODO maintain index
 			Session session = Session.deserialize(line);
+			if (session == null)
+				return null;
+			ret.add(session);
+		}
+		return ret;
+	}
+
+	public static List<Session> deserializeMakeupAll(String str){
+		List<Session> ret = new ArrayList<>();
+		String[] lines = str.split("\n");
+		for (String line : lines){
+			Session session = Session.deserializeMakeup(line);
 			if (session == null)
 				return null;
 			ret.add(session);
