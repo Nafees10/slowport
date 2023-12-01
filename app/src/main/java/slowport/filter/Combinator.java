@@ -18,7 +18,21 @@ public class Combinator {
 		this.criterion = criterion;
 	}
 
-	List<List<Session>> combinations(List<Session> sessions) {
-		return null; // TODO write combinator
-	}
+	public List<List<Session>> combinations(List<Session> sessions) {
+        List<List<Session>> result = new ArrayList<>();
+        int totalSessions = sessions.size();
+        int totalCombinations = 1 << totalSessions; // 2^totalSessions
+
+        for (int i = 0; i < totalCombinations; i++) {
+            List<Session> currentCombination = new ArrayList<>();
+            for (int j = 0; j < totalSessions; j++) {
+                if ((i & (1 << j)) != 0) {
+                    currentCombination.add(sessions.get(j));
+                }
+            }
+            result.add(currentCombination);
+        }
+
+        return result;
+    }
 }
