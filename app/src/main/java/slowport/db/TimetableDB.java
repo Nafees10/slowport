@@ -1,7 +1,6 @@
 package slowport.db;
 
 import java.sql.*;
-import slowport.common.*;
 
 import java.util.*;
 
@@ -23,7 +22,6 @@ INSERT INTO timetables (version, timetable) VALUES (?, ?);
 
 	private PreparedStatement stmntGetVersions, stmntGetTimetable,
 					stmntAddTimetable;
-	private HashMap<String, List<Session>> sessions;
 
 	public TimetableDB(Connection conn) throws DBException{
 		try{
