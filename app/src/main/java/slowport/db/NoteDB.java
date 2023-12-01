@@ -7,22 +7,24 @@ import slowport.common.*;
 public class NoteDB{
 	private static final String queryGetNotes =
 """
-SELECT week, course, sessionIndex, note FROM notes;
+SELECT week, course, section, sessionIndex, note FROM notes;
 """;
 
 	private static final String queryGetNotesByCourse =
 """
-SELECT week, course, sessionIndex, note FROM notes WHERE course=?;
+SELECT week, course, section, sessionIndex, note FROM notes
+WHERE course=? AND section=?;
 """;
 
 	private static final String queryAddNote =
 """
-INSERT INTO notes (week, course, sessionIndex, note) VALUES (?, ?, ?, ?);
+INSERT INTO notes (week, course, section, sessionIndex, note) VALUES
+(?, ?, ?, ?, ?);
 """;
 
 	private static final String queryRemoveNote =
 """
-DELETE FROM notes WHERE week=? AND course=? AND sessionIndex=?;
+DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 """;
 
 	private PreparedStatement stmntGetNotes, stmntGetNotesByCourse, stmntAddNote,
@@ -35,8 +37,9 @@ DELETE FROM notes WHERE week=? AND course=? AND sessionIndex=?;
 			Note note = new Note(
 					res.getInt(1),
 					res.getString(2),
-					res.getInt(3),
-					res.getString(4)
+					res.getString(3),
+					res.getInt(4),
+					res.getString(5)
 					);
 			return note;
 		} catch (SQLException e){
@@ -74,9 +77,10 @@ DELETE FROM notes WHERE week=? AND course=? AND sessionIndex=?;
 		return null;
 	}
 
-	public List<Note> getNote(String course){
+	public List<Note> getNote(String course, String section){
 		try{
 			stmntGetNotesByCourse.setString(1, course);
+			stmntGetNotesByCourse.setString(2, section);
 			ResultSet res = stmntGetNotesByCourse.executeQuery();
 			List<Note> ret = new ArrayList<>();
 			while (true){
@@ -96,8 +100,9 @@ DELETE FROM notes WHERE week=? AND course=? AND sessionIndex=?;
 		try{
 			stmntAddNote.setInt(1, note.getWeek());
 			stmntAddNote.setString(2, note.getCourse());
-			stmntAddNote.setInt(3, note.getSessionIndex());
-			stmntAddNote.setString(4, note.getNote());
+			stmntAddNote.setString(3, note.getSection());
+			stmntAddNote.setInt(4, note.getSessionIndex());
+			stmntAddNote.setString(5, note.getNote());
 			return stmntAddNote.executeUpdate() >= 1;
 		} catch (SQLException e){
 			e.printStackTrace();
@@ -109,7 +114,8 @@ DELETE FROM notes WHERE week=? AND course=? AND sessionIndex=?;
 		try{
 			stmntRemoveNote.setInt(1, note.getWeek());
 			stmntRemoveNote.setString(2, note.getCourse());
-			stmntRemoveNote.setInt(3, note.getSessionIndex());
+			stmntRemoveNote.setString(3, note.getSection());
+			stmntRemoveNote.setInt(4, note.getSessionIndex());
 			return stmntRemoveNote.executeUpdate() >= 1;
 		} catch (SQLException e){
 			e.printStackTrace();
