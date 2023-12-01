@@ -57,6 +57,14 @@ package "slowport"{
 			+ getNote() : String
 		}
 
+		class Timetable{
+			- sessions : List<Session>
+			+ {static} sort(sessions : List<Session>) : void
+			+ Timetable(sessions : List<Session>)
+			+ getSessions() : List<Session>
+			+ getSessions(day : DayOfWeek) : List<Session>
+		}
+
 		Note -- Session
 	}
 
@@ -198,17 +206,17 @@ package "slowport"{
 
 	package "rater"{
 		abstract class Rater{
-			+ {abstract} rate(sessions : List<Session>) : int
+			+ {abstract} rate(timetable : Timetable) : int
 		}
 		Rater -- Session : //Rates//
 		class ConsistencyRater extends Rater{
-			+ rate(sessions : List<Session>) : int
+			+ rate(timetable : Timetable) : int
 		}
 		class GapRater extends Rater{
-			+ rate(sessions : List<Session>) : int
+			+ rate(timetable : Timetable) : int
 		}
 		class DayRater extends Rater{
-			+ rate(sessions : List<Session>) : int
+			+ rate(timetable : Timetable) : int
 		}
 		class ComboRater extends Rater{
 			- raters : List<Rater>
