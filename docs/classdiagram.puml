@@ -43,6 +43,7 @@ package "slowport"{
 		class Note{
 			- week : YearWeek
 			- course : String
+			- section : String
 			- sessionIndex : int
 			- note : String
 			+ Node(week : YearWeek, course : String, section : String,\
@@ -145,7 +146,6 @@ package "slowport"{
 			- stmntGetVersions : PreparedStatement
 			- stmntGetTimetable : PreparedStatement
 			- stmntAddTimetable : PreparedStatement
-			- sessions : Map<String, List<Session>>
 			+ TimetableDB(conn : Connection)
 			+ getVersions() : List<String>
 			+ getTimetable(version : String) : String
@@ -163,7 +163,7 @@ package "slowport"{
 			- stmntGetSelections : PreparedStatement
 			- stmntRemoveSelection : PreparedStatement
 			- stmntAddSelection : PreparedStatement
-			+ SelectionDB(conn : Connection)
+			+ SelectionDB(conn : Connection, timetableStore : TimetableDB)
 			+ getSelected(version : String) : List<Session>
 			+ addSelected(session : Session) : boolean
 			+ removeSelected(session : Session) : boolean
