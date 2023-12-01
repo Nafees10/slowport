@@ -114,11 +114,18 @@ public class Session {
 	public static List<Session> deserializeAll(String str){
 		List<Session> ret = new ArrayList<>();
 		String[] lines = str.split("\n");
+		Map<String, Integer> counts = new HashMap<>();
 		for (String line : lines){
-			/// TODO maintain index
 			Session session = Session.deserialize(line);
 			if (session == null)
 				return null;
+			String key = session.getName() + "\t" + session.getSection();
+			if (counts.containsKey(key)){
+				session.index = counts.get(key);
+				counts.put(key, counts.get(key) + 1);
+			}else{
+				counts.put(key, 1);
+			}
 			ret.add(session);
 		}
 		return ret;
