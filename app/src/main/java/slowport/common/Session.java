@@ -11,6 +11,9 @@ public class Session {
 	private String name;
 	private String section;
 	private String venue;
+	private int index;
+	private boolean recurring;
+	private YearWeek week;
 
 	public Session(DayOfWeek day, LocalTime time, Duration duration, String name,
 			String section, String venue) {
@@ -20,6 +23,35 @@ public class Session {
 		this.name = name;
 		this.section = section;
 		this.venue = venue;
+		this.recurring = true;
+		this.week = null;
+		this.index = 0;
+	}
+
+	public Session(DayOfWeek day, LocalTime time, Duration duration, String name,
+			String section, String venue, int index) {
+		this.day = day;
+		this.time = time;
+		this.duration = duration;
+		this.name = name;
+		this.section = section;
+		this.venue = venue;
+		this.recurring = true;
+		this.week = null;
+		this.index = index;
+	}
+
+	public Session(DayOfWeek day, LocalTime time, Duration duration, String name,
+			String section, String venue, YearWeek week) {
+		this.day = day;
+		this.time = time;
+		this.duration = duration;
+		this.name = name;
+		this.section = section;
+		this.venue = venue;
+		this.recurring = false;
+		this.week = week;
+		this.index = 0;
 	}
 
 	public String toString(){
@@ -95,25 +127,15 @@ public class Session {
 		return venue;
 	}
 
-	public void setDay(DayOfWeek day) {
-		this.day = day;
+	public int getIndex() {
+		return index;
 	}
 
-	public void setTime(LocalTime time) {
-		this.time = time;
+	public boolean isRecurring() {
+		return recurring;
 	}
 
-	public void setDuration(Duration duration) {
-		this.duration = duration;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	public void setSection(String section) {
-		this.section = section;
-	}
-	public void setVenue(String venue) {
-		this.venue = venue;
+	public YearWeek getWeek() {
+		return week;
 	}
 }
