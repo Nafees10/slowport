@@ -36,7 +36,9 @@ package "slowport"{
 			+ setIsRecurring(val : boolean) : void
 			+ setWeek(val : YearWeek) : void
 			+ deserialize(val : String) : Session
+			+ deserializeMakeup(val : String) : Session
 			+ deserializeAll(val : String) : List<Session>
+			+ deserializeMakeupAll(val : String) : List<Session>
 			+ toString() : String
 		}
 
