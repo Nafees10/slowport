@@ -35,6 +35,9 @@ package "slowport"{
 			+ setIndex(val : int) : void
 			+ setIsRecurring(val : boolean) : void
 			+ setWeek(val : YearWeek) : void
+			+ deserialize(val : String) : Session
+			+ deserializeAll(val : String) : List<Session>
+			+ toString() : String
 		}
 
 		class Note{
@@ -143,12 +146,14 @@ package "slowport"{
 			- stmntGetVersions : PreparedStatement
 			- stmntGetTimetable : PreparedStatement
 			- stmntAddTimetable : PreparedStatement
-			- sessions : Map<String, List<Session>>
 			+ TimetableDB(conn : Connection)
 			+ getVersions() : List<String>
 			+ getTimetable(version : String) : String
+			+ getMakeupTimetable() : String
 			+ getSessions(version : String) : List<Session>
-			+ addTimetable(version : String, timetable : String) : void
+			+ getMakeupSessions() : List<Session>
+			+ addTimetable(version : String, timetable : String) : boolean
+			+ setMakeupTimetable(String timetable) : boolean
 		}
 
 		TimetableDB -- Session : //Manages//
@@ -162,10 +167,10 @@ package "slowport"{
 			- stmntGetSelections : PreparedStatement
 			- stmntRemoveSelection : PreparedStatement
 			- stmntAddSelection : PreparedStatement
-			+ SelectionDB(conn : Connection)
+			+ SelectionDB(conn : Connection, timetableStore : TimetableDB)
 			+ getSelected(version : String) : List<Session>
-			+ addSelected(session : Session) : void
-			+ removeSelected(session : Session) : void
+			+ addSelected(session : Session) : boolean
+			+ removeSelected(session : Session) : boolean
 		}
 
 		SelectionDB o- TimetableDB
@@ -173,7 +178,7 @@ package "slowport"{
 
 		class NoteDB{
 			- {static} queryGetNotes : String
-			- {static} queryGetNotesByCourseSection : String
+			- {static} queryGetNotesByCourse : String
 			- {static} queryAddNote : String
 			- conn : Connection
 			- stmntGetNotes : PreparedStatement
@@ -181,9 +186,9 @@ package "slowport"{
 			- stmntAddNote : PreparedStatement
 			+ NoteDB(conn : Connection)
 			+ getNotes() : List<Note>
-			+ getNote(String course, String section) : List<Note>
-			+ addNote(note : Note) : void
-			+ removeNote(note : Note) : void
+			+ getNotes(String course) : List<Note>
+			+ addNote(note : Note) : boolean
+			+ removeNote(note : Note) : boolean
 		}
 
 		NoteDB -- Note : //Manages//
