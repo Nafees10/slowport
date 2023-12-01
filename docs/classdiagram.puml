@@ -207,6 +207,7 @@ package "slowport"{
 	package "rater"{
 		abstract class Rater{
 			+ {abstract} rate(timetable : Timetable) : int
+			+ {static} normalize(scores : List<int>) : void
 		}
 		Rater -- Session : //Rates//
 		class ConsistencyRater extends Rater{
