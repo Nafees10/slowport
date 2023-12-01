@@ -38,8 +38,13 @@ INSERT INTO timetables (version, timetable) VALUES (?, ?);
 		try{
 			ResultSet res = stmntGetVersions.executeQuery();
 			List<String> ret = new ArrayList<>();
-			while (res.next())
-				ret.add(res.getString(1));
+			while (res.next()){
+				// skip -makeup ones
+				String version = res.getString(1);
+				if (version.contains("-makeup"))
+					continue;
+				ret.add(version);
+			}
 			return ret;
 		} catch (SQLException e){
 			e.printStackTrace();
@@ -60,11 +65,16 @@ INSERT INTO timetables (version, timetable) VALUES (?, ?);
 		return null;
 	}
 
+	public String getMakeupTimetable(String version){
+		return getTimetable(version + "-makeup");
+	}
+
 	public List<Session> getSessions(String version){
-		String tt = getTimetable(version);
-		if (tt == null)
-			return null;
-		return Session.deserializeAll(tt);
+		return Session.deserializeAll(getTimetable(version));
+	}
+
+	public List<Session> getMakeupSessions(String version){
+		return Session.deserializeMakeupAll(getMakeupTimetable(version));
 	}
 
 	public boolean addTimetable(String version, String timetable){
