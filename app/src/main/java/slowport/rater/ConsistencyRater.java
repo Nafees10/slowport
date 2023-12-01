@@ -5,12 +5,12 @@ import java.time.*;
 import slowport.common.*;
 
 public class ConsistencyRater extends Rater{
-	public long rate(Timetable timetable){
+	private static final int MAGIC_NUMBER = 6 * 60;
+	public int rate(Timetable timetable){
 		if (timetable.getSessions().size() == 0)
 			return 0;
-		Map<DayOfWeek, Long> startTimes = new HashMap<>(),
-			endTimes = new HashMap<>();
-		long startSum = 0, endSum = 0, n = 0;
+		long earliestStart = -1, earliestEnd = -1,
+				 latestStart = -1, latestEnd = -1;
 		for (DayOfWeek day : DayOfWeek.values()){
 			List<Session> sessions = timetable.getSessions(day);
 			if (sessions == null || sessions.size() == 0)
@@ -20,23 +20,18 @@ public class ConsistencyRater extends Rater{
 			long startTime = first.getTime().toSecondOfDay(),
 					 endTime = last.getTime().toSecondOfDay() +
 						 last.getDuration().toSeconds();
-			startTimes.put(day, startTime);
-			endTimes.put(day, endTime);
-			n ++;
-			startSum += startTime;
-			endSum += endTime;
-		}
-		if (n == 0)
-			return 0;
-		long startAvg = startSum / n, endAvg = endSum / n;
-		// now just sum up difference from mean
-		long inconsistency = 0;
-		for (DayOfWeek day : DayOfWeek.values()){
-			if (!startTimes.containsKey(day) || endTimes.containsKey(day))
+			if (earliestStart == -1 || latestEnd == -1){
+				latestStart = earliestStart = startTime;
+				latestEnd = earliestEnd = endTime;
 				continue;
-			inconsistency += Math.abs(startTimes.get(day) - startAvg);
-			inconsistency += Math.abs(endTimes.get(day) - endAvg);
+			}
+			latestStart = Math.max(latestStart, startTime);
+			earliestStart = Math.min(earliestStart, startTime);
+			latestEnd = Math.max(latestEnd, endTime);
+			earliestEnd = Math.min(earliestEnd, endTime);
 		}
-		return inconsistency;
+		long diff = (latestStart - earliestStart) + (latestEnd - earliestEnd);
+		diff /= 60; // diff in minutes
+		return (int)(diff * 1000 / MAGIC_NUMBER);
 	}
 }

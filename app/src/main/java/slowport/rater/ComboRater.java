@@ -12,7 +12,7 @@ public class ComboRater extends Rater{
 		this.weights = new ArrayList<>(weights);
 	}
 
-	public long rate(List<Timetable> timetable){
+	public int rate(Timetable timetable){
 		return 0; /// TODO
 	}
 }

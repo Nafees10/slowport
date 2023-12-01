@@ -9,6 +9,6 @@ public class DayRater extends Rater{
 		Map<DayOfWeek, Boolean> dayStatus = new HashMap<>();
 		for (Session session : timetable.getSessions())
 			dayStatus.put(session.getDay(), true);
-		return dayStatus.size();
+		return dayStatus.size() * 1000 / 7;
 	}
 }
