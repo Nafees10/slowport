@@ -35,17 +35,17 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 			if (!res.next())
 				return null;
 			Note note = new Note(
-					res.getInt(1),
+					new YearWeek(res.getString(1)),
 					res.getString(2),
 					res.getString(3),
 					res.getInt(4),
 					res.getString(5)
 					);
 			return note;
-		} catch (SQLException e){
+		} catch (Exception e){
 			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
 	public NoteDB(Connection conn) throws DBException{
@@ -98,7 +98,7 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 
 	public boolean addNote(Note note){
 		try{
-			stmntAddNote.setInt(1, note.getWeek());
+			stmntAddNote.setString(1, note.getWeek().toString());
 			stmntAddNote.setString(2, note.getCourse());
 			stmntAddNote.setString(3, note.getSection());
 			stmntAddNote.setInt(4, note.getSessionIndex());
@@ -112,7 +112,7 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 
 	public boolean removeNote(Note note){
 		try{
-			stmntRemoveNote.setInt(1, note.getWeek());
+			stmntRemoveNote.setString(1, note.getWeek().toString());
 			stmntRemoveNote.setString(2, note.getCourse());
 			stmntRemoveNote.setString(3, note.getSection());
 			stmntRemoveNote.setInt(4, note.getSessionIndex());
