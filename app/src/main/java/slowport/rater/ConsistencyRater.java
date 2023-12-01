@@ -5,7 +5,7 @@ import java.time.*;
 import slowport.common.*;
 
 public class ConsistencyRater extends Rater{
-	public int rate(Timetable timetable){
+	public long rate(Timetable timetable){
 		if (timetable.getSessions().size() == 0)
 			return 0;
 		Map<DayOfWeek, Long> startTimes = new HashMap<>(),
@@ -30,12 +30,12 @@ public class ConsistencyRater extends Rater{
 			return 0;
 		long startAvg = startSum / n, endAvg = endSum / n;
 		// now just sum up difference from mean
-		int inconsistency = 0;
+		long inconsistency = 0;
 		for (DayOfWeek day : DayOfWeek.values()){
 			if (!startTimes.containsKey(day) || endTimes.containsKey(day))
 				continue;
-			inconsistency += Math.abs(startTimes.get(day) - startAvg) / 60;
-			inconsistency += Math.abs(endTimes.get(day) - endAvg) / 60;
+			inconsistency += Math.abs(startTimes.get(day) - startAvg);
+			inconsistency += Math.abs(endTimes.get(day) - endAvg);
 		}
 		return inconsistency;
 	}

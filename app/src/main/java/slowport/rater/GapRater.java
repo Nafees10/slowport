@@ -5,12 +5,7 @@ import java.time.*;
 import slowport.common.*;
 
 public class GapRater extends Rater{
-	// the worse the univeristy at making timetables, the higher MAGIC_NUMBER
-	// should be. 8 is really bad btw, normally it should be no more than 4
-	private static final int MAGIC_NUMBER = 8,
-					SEC_PER_DAY = MAGIC_NUMBER * 60 * 60,
-					SEC_PER_WEEK = SEC_PER_DAY * 7;
-	public int rate(Timetable timetable){
+	public long rate(Timetable timetable){
 		long gaps = 0; /// total gaps, in seconds
 		for (DayOfWeek day : DayOfWeek.values()){
 			List<Session> sessions = timetable.getSessions(day);
@@ -27,6 +22,6 @@ public class GapRater extends Rater{
 					curr.getDuration().toSeconds();
 			}
 		}
-		return (int)(gaps * 1000 / SEC_PER_WEEK);
+		return gaps;
 	}
 }
