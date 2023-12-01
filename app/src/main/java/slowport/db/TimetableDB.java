@@ -1,8 +1,8 @@
 package slowport.db;
 
 import java.sql.*;
-
 import java.util.*;
+import slowport.common.*;
 
 public class TimetableDB{
 	private static final String queryGetVersions =
@@ -58,6 +58,13 @@ INSERT INTO timetables (version, timetable) VALUES (?, ?);
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public List<Session> getSessions(String version){
+		String tt = getTimetable(version);
+		if (tt == null)
+			return null;
+		return Session.deserializeAll(tt);
 	}
 
 	public boolean addTimetable(String version, String timetable){
