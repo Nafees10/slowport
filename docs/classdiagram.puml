@@ -149,8 +149,11 @@ package "slowport"{
 			+ TimetableDB(conn : Connection)
 			+ getVersions() : List<String>
 			+ getTimetable(version : String) : String
+			+ getMakeupTimetable() : String
 			+ getSessions(version : String) : List<Session>
+			+ getMakeupSessions() : List<Session>
 			+ addTimetable(version : String, timetable : String) : boolean
+			+ setMakeupTimetable(String timetable) : boolean
 		}
 
 		TimetableDB -- Session : //Manages//
