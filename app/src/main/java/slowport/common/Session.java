@@ -143,6 +143,14 @@ public class Session {
 		return ret;
 	}
 
+	public boolean overlaps(Session other){
+		if (this.day != other.day)
+			return false;
+		LocalTime thisEndTime = this.time.plus(this.duration);
+		LocalTime otherEndTime = other.time.plus(other.duration);
+		return this.time.isBefore(otherEndTime) && thisEndTime.isAfter(other.time);
+	}
+
 	public DayOfWeek getDay() {
 		return day;
 	}
