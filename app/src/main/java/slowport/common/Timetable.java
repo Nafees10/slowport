@@ -7,7 +7,7 @@ public class Timetable{
 	private List<Session> sessions;
 	private Map<String, Set<String>> overlaps;
 	private List<String> courses;
-	private Map<String, List<String>> sections;
+	private Map<String, Set<String>> sections;
 
 	public static void sort(List<Session> sessions){
 		boolean repeat = true;
@@ -64,7 +64,7 @@ public class Timetable{
 			String section = session.getSection();
 			if (!sections.containsKey(course)){
 				courses.add(course);
-				sections.put(course, new ArrayList<>());
+				sections.put(course, new HashSet<>());
 			}
 			if (!sections.get(course).contains(section))
 				sections.get(course).add(section);
@@ -102,7 +102,7 @@ public class Timetable{
 		return courses;
 	}
 
-	public List<String> getSections(String course){
+	public Set<String> getSections(String course){
 		if (sections.containsKey(course))
 			return sections.get(course);
 		return null;
