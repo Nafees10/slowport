@@ -5,7 +5,7 @@ import java.time.*;
 
 public class Timetable{
 	private List<Session> sessions;
-	private Map<String, List<String>> overlaps;
+	private Map<String, Set<String>> overlaps;
 	private List<String> courses;
 	private Map<String, List<String>> sections;
 
@@ -52,7 +52,7 @@ public class Timetable{
 				String key = session.getName() + "\t" + session.getSection();
 				String val = other.getName() + "\t" + other.getSection();
 				if (!overlaps.containsKey(key))
-					overlaps.put(key, new ArrayList<>());
+					overlaps.put(key, new HashSet<>());
 				overlaps.get(key).add(val);
 			}
 		}
