@@ -5,6 +5,9 @@ import java.time.*;
 
 public class Timetable{
 	private List<Session> sessions;
+	private Map<String, List<String>> overlaps;
+	private List<String> courses;
+	private Map<String, List<String>> sections;
 
 	public static void sort(List<Session> sessions){
 		boolean repeat = true;
@@ -40,9 +43,46 @@ public class Timetable{
 		}
 	}
 
+	private void findOverlaps(){
+		for (Session session : sessions){
+			for (Session other : sessions){
+				if (!session.overlaps(other))
+					continue;
+				// VERY BAD! overlapping pieces of sessions
+				String key = session.getName() + "\t" + session.getSection();
+				String val = other.getName() + "\t" + other.getSection();
+				if (!overlaps.containsKey(key))
+					overlaps.put(key, new ArrayList<>());
+				overlaps.get(key).add(val);
+			}
+		}
+	}
+
+	private void findCoursesSections(){
+		for (Session session : sessions){
+			String course = session.getName();
+			String section = session.getSection();
+			if (!sections.containsKey(course)){
+				courses.add(course);
+				sections.put(course, new ArrayList<>());
+			}
+			if (!sections.get(course).contains(section))
+				sections.get(course).add(section);
+		}
+	}
+
 	public Timetable(List<Session> sessions){
 		this.sessions = new ArrayList<>(sessions);
 		sort(this.sessions);
+		findCoursesSections();
+		findOverlaps();
+	}
+
+	public Timetable(Timetable timetable){
+		this.sessions = new ArrayList<>(timetable.sessions);
+		this.overlaps = new HashMap<>(timetable.overlaps);
+		this.courses = new ArrayList<>(timetable.courses);
+		this.sections = new HashMap<>(timetable.sections);
 	}
 
 	public List<Session> getSessions(){
@@ -56,5 +96,22 @@ public class Timetable{
 				ret.add(session);
 		}
 		return ret;
+	}
+
+	public List<String> getCourses(){
+		return courses;
+	}
+
+	public List<String> getSections(String course){
+		if (sections.containsKey(course))
+			return sections.get(course);
+		return null;
+	}
+
+	public boolean clashes(String courseA, String sectionA,
+			String courseB, String sectionB){
+		String a = courseA + "\t" + sectionA,
+					 b = courseB + "\t" + sectionB;
+		return overlaps.containsKey(a) && overlaps.get(a).contains(b);
 	}
 }
