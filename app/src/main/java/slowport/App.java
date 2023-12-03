@@ -69,6 +69,14 @@ public class App extends javax.swing.JFrame {
 			box.setSelected(false);
 			box.setVisible(false);
 		}
+
+		// load that fat fuck data from database
+		versions = timetableDB.getVersions();
+		if (versions.size() > 0){
+			selectedVersion = versions.get(versions.size() - 1);
+			timetable = new Timetable(
+					Session.deserializeAll(timetableDB.getTimetable(selectedVersion)));
+		}
 	}
 
 	/**
@@ -1057,6 +1065,10 @@ public class App extends javax.swing.JFrame {
 	private NoteDB noteDB;
 	private TimetableDB timetableDB;
 
+	private Timetable timetable;
+	private List<String> versions;
+	private String selectedVersion;
+
 	private List<JCheckBox> sectionCheckboxes;
 
 	private boolean updateInProgress = false;
@@ -1065,6 +1077,18 @@ public class App extends javax.swing.JFrame {
 
 	private boolean combinatorInProgress = false;
 	private List<List<Session>> combinatorResult;
+
+	private static class Updater implements Runnable{
+		public void run(){
+			// TODO
+		}
+	}
+
+	private static class Combinatorer implements Runnable{
+		public void run(){
+			// TODO
+		}
+	}
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JCheckBox aCheckBox;
