@@ -5,6 +5,7 @@
 package slowport;
 
 import java.sql.Connection;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -31,7 +32,40 @@ public class App extends javax.swing.JFrame {
 			noteDB = new NoteDB(conn);
 		} catch (DBException e){
 			e.printStackTrace();
+			System.out.println("DAMNIT! freaking database!");
+			System.exit(69);
 		}
+		sectionCheckboxes = new ArrayList<>();
+		sectionCheckboxes.add(aCheckBox);
+		sectionCheckboxes.add(bCheckBox);
+		sectionCheckboxes.add(cCheckBox);
+		sectionCheckboxes.add(dCheckBox);
+		sectionCheckboxes.add(eCheckBox);
+		sectionCheckboxes.add(fCheckBox);
+		sectionCheckboxes.add(gCheckBox);
+		sectionCheckboxes.add(hCheckBox);
+		sectionCheckboxes.add(iCheckBox);
+		sectionCheckboxes.add(jCheckBox);
+		sectionCheckboxes.add(kCheckBox);
+		sectionCheckboxes.add(lCheckBox);
+		sectionCheckboxes.add(mCheckBox);
+		sectionCheckboxes.add(nCheckBox);
+		sectionCheckboxes.add(oCheckBox);
+		sectionCheckboxes.add(pCheckBox);
+		sectionCheckboxes.add(qCheckBox);
+		sectionCheckboxes.add(rCheckBox);
+		sectionCheckboxes.add(sCheckBox);
+		sectionCheckboxes.add(tCheckBox);
+		sectionCheckboxes.add(uCheckBox);
+		sectionCheckboxes.add(vCheckBox);
+		sectionCheckboxes.add(wCheckBox);
+		sectionCheckboxes.add(xCheckBox);
+		sectionCheckboxes.add(yCheckBox);
+		sectionCheckboxes.add(zCheckBox);
+
+		// disabled pieces of shits
+		for (JCheckBox box : sectionCheckboxes)
+			box.setEnabled(false);
 	}
 
 	/**
@@ -80,13 +114,13 @@ public class App extends javax.swing.JFrame {
     combinatorCourseTable = new javax.swing.JTable();
     jButton5 = new javax.swing.JButton();
     jLabel16 = new javax.swing.JLabel();
-    aCheckbox = new javax.swing.JCheckBox();
+    aCheckBox = new javax.swing.JCheckBox();
     eCheckBox = new javax.swing.JCheckBox();
     mCheckBox = new javax.swing.JCheckBox();
     iCheckBox = new javax.swing.JCheckBox();
     uCheckBox = new javax.swing.JCheckBox();
     qCheckBox = new javax.swing.JCheckBox();
-    bCheckbox = new javax.swing.JCheckBox();
+    bCheckBox = new javax.swing.JCheckBox();
     fCheckBox = new javax.swing.JCheckBox();
     jCheckBox = new javax.swing.JCheckBox();
     nCheckBox = new javax.swing.JCheckBox();
@@ -279,11 +313,11 @@ public class App extends javax.swing.JFrame {
 
     jLabel5.setText("Add Course");
 
-    addCourseCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    addCourseCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Course" }));
 
     jLabel4.setText("Select Section");
 
-    addCourseSectionCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    addCourseSectionCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Section" }));
 
     jButton3.setText(" Drop Selected Course");
     jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -461,10 +495,10 @@ public class App extends javax.swing.JFrame {
 
     jLabel16.setText("Selection Criteria:");
 
-    aCheckbox.setText("sectionA");
-    aCheckbox.addActionListener(new java.awt.event.ActionListener() {
+    aCheckBox.setText("sectionA");
+    aCheckBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        aCheckboxActionPerformed(evt);
+        aCheckBoxActionPerformed(evt);
       }
     });
 
@@ -478,7 +512,7 @@ public class App extends javax.swing.JFrame {
 
     qCheckBox.setText("sectionQ");
 
-    bCheckbox.setText("sectionB");
+    bCheckBox.setText("sectionB");
 
     fCheckBox.setText("sectionF");
 
@@ -519,7 +553,7 @@ public class App extends javax.swing.JFrame {
 
     zCheckBox.setText("sectionZ");
 
-    combinatorAddCourseCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    combinatorAddCourseCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Course" }));
 
     jButton7.setText("Add Course");
 
@@ -605,7 +639,7 @@ public class App extends javax.swing.JFrame {
                   .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                       .addComponent(eCheckBox)
-                      .addComponent(aCheckbox)
+                      .addComponent(aCheckBox)
                       .addComponent(iCheckBox)
                       .addComponent(mCheckBox)
                       .addComponent(qCheckBox)
@@ -613,7 +647,7 @@ public class App extends javax.swing.JFrame {
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                       .addComponent(fCheckBox)
-                      .addComponent(bCheckbox)
+                      .addComponent(bCheckBox)
                       .addComponent(jCheckBox)
                       .addComponent(nCheckBox)
                       .addComponent(rCheckBox)
@@ -687,7 +721,7 @@ public class App extends javax.swing.JFrame {
               .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                   .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addComponent(aCheckbox)
+                    .addComponent(aCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(eCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -699,7 +733,7 @@ public class App extends javax.swing.JFrame {
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(uCheckBox))
                   .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addComponent(bCheckbox)
+                    .addComponent(bCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(fCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -783,9 +817,9 @@ public class App extends javax.swing.JFrame {
       }
     });
 
-    deltaACombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    deltaACombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Version" }));
 
-    deltaBCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    deltaBCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Version" }));
 
     deltaTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -974,9 +1008,9 @@ public class App extends javax.swing.JFrame {
 		// TODO add your handling code here:
 	}//GEN-LAST:event_jButton5ActionPerformed
 
-  private void aCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aCheckboxActionPerformed
+  private void aCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aCheckBoxActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_aCheckboxActionPerformed
+  }//GEN-LAST:event_aCheckBoxActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -1020,13 +1054,15 @@ public class App extends javax.swing.JFrame {
 	private NoteDB noteDB;
 	private TimetableDB timetableDB;
 
+	private List<JCheckBox> sectionCheckboxes;
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JCheckBox aCheckbox;
+  private javax.swing.JCheckBox aCheckBox;
   private javax.swing.JComboBox<String> addCourseCombo;
   private javax.swing.JComboBox<String> addCourseSectionCombo;
   private javax.swing.JCheckBox allCheckBox;
-  private javax.swing.JCheckBox bCheckbox;
+  private javax.swing.JCheckBox bCheckBox;
   private javax.swing.JCheckBox cCheckBox;
   private javax.swing.JComboBox<String> combinatorAddCourseCombo;
   private javax.swing.JTable combinatorCourseTable;

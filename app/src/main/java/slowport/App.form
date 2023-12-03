@@ -343,11 +343,8 @@
             <Component class="javax.swing.JComboBox" name="addCourseCombo">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
+                  <StringArray count="1">
+                    <StringItem index="0" value="Select Course"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -363,11 +360,8 @@
             <Component class="javax.swing.JComboBox" name="addCourseSectionCombo">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
+                  <StringArray count="1">
+                    <StringItem index="0" value="Select Section"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -504,7 +498,7 @@
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Component id="eCheckBox" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="aCheckbox" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="aCheckBox" min="-2" max="-2" attributes="0"/>
                                                   <Component id="iCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                                   <Component id="mCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                                   <Component id="qCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -513,7 +507,7 @@
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Component id="fCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="bCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="bCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                                   <Component id="jCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                                   <Component id="nCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                                   <Component id="rCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -606,7 +600,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="aCheckbox" min="-2" max="-2" attributes="0"/>
+                                              <Component id="aCheckBox" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="eCheckBox" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
@@ -619,7 +613,7 @@
                                               <Component id="uCheckBox" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="bCheckbox" min="-2" max="-2" attributes="0"/>
+                                              <Component id="bCheckBox" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="fCheckBox" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
@@ -765,12 +759,12 @@
                 <Property name="text" type="java.lang.String" value="Selection Criteria:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="aCheckbox">
+            <Component class="javax.swing.JCheckBox" name="aCheckBox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="sectionA"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aCheckboxActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aCheckBoxActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="eCheckBox">
@@ -798,7 +792,7 @@
                 <Property name="text" type="java.lang.String" value="sectionQ"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="bCheckbox">
+            <Component class="javax.swing.JCheckBox" name="bCheckBox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="sectionB"/>
               </Properties>
@@ -902,11 +896,8 @@
             <Component class="javax.swing.JComboBox" name="combinatorAddCourseCombo">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
+                  <StringArray count="1">
+                    <StringItem index="0" value="Select Course"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -1127,11 +1118,8 @@
             <Component class="javax.swing.JComboBox" name="deltaACombo">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
+                  <StringArray count="1">
+                    <StringItem index="0" value="Select Version"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -1142,11 +1130,8 @@
             <Component class="javax.swing.JComboBox" name="deltaBCombo">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
+                  <StringArray count="1">
+                    <StringItem index="0" value="Select Version"/>
                   </StringArray>
                 </Property>
               </Properties>
