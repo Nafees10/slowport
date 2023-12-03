@@ -12,6 +12,7 @@ import javax.swing.*;
 import slowport.db.*;
 import slowport.common.*;
 import slowport.rater.*;
+import slowport.slowapi.*;
 import slowport.filter.*;
 
 /**
@@ -76,7 +77,17 @@ public class App extends javax.swing.JFrame {
 			selectedVersion = versions.get(versions.size() - 1);
 			timetable = new Timetable(
 					Session.deserializeAll(timetableDB.getTimetable(selectedVersion)));
+		}else{
+			versions = null;
+			selectedVersion = null;
+			timetable = null;
 		}
+
+		// run dat updater
+		updateInProgress = true;
+		updateProgress.setIndeterminate(true);
+		Thread dhaga = new Thread(new Updater());
+		dhaga.run();
 	}
 
 	/**
@@ -1074,19 +1085,48 @@ public class App extends javax.swing.JFrame {
 	private boolean updateInProgress = false;
 	private Map<String, String> updatedTimetables;
 	private List<String> updatedVersions;
+	private boolean updated = false;
 
 	private boolean combinatorInProgress = false;
-	private List<List<Session>> combinatorResult;
+	private List<Timetable> combinatorResult;
 
-	private static class Updater implements Runnable{
+	private class Updater implements Runnable{
 		public void run(){
-			// TODO
+			List<String> remoteVersions = SlowApi.getVersions();
+			if (remoteVersions == null){
+				updateInProgress = false;
+				return;
+			}
+			for (String remoteVersion : remoteVersions){
+				if (versions.contains(remoteVersion))
+					continue;
+				// gotta fetch it
+				versions.add(remoteVersion);
+				String tt = SlowApi.getTimetable(remoteVersion);
+				if (tt == null){
+					updateInProgress = false;
+					return;
+				}
+				timetableDB.addTimetable(remoteVersion, tt);
+				tt = SlowApi.getMakeupTimetable(remoteVersion);
+				if (tt != null)
+					timetableDB.addTimetable(remoteVersion + "-makeup", tt);
+				selectedVersion = remoteVersion;
+				updated = true;
+			}
+			updateInProgress = false;
 		}
 	}
 
-	private static class Combinatorer implements Runnable{
+	private class Combinatorer implements Runnable{
+		private Map<String, Set<String>> sections;
+		public Combinatorer(Map<String, Set<String>> sections){
+			this.sections = sections;
+		}
 		public void run(){
-			// TODO
+			Combinator daCombinator = new Combinator(timetable);
+			combinatorResult = daCombinator.combinations(sections);
+			combinatorInProgress = false;
 		}
 	}
 
