@@ -80,32 +80,32 @@ public class App extends javax.swing.JFrame {
     combinatorCourseTable = new javax.swing.JTable();
     jButton5 = new javax.swing.JButton();
     jLabel16 = new javax.swing.JLabel();
-    jCheckBox1 = new javax.swing.JCheckBox();
-    jCheckBox2 = new javax.swing.JCheckBox();
-    jCheckBox3 = new javax.swing.JCheckBox();
-    jCheckBox4 = new javax.swing.JCheckBox();
-    jCheckBox5 = new javax.swing.JCheckBox();
-    jCheckBox6 = new javax.swing.JCheckBox();
-    jCheckBox7 = new javax.swing.JCheckBox();
-    jCheckBox8 = new javax.swing.JCheckBox();
-    jCheckBox9 = new javax.swing.JCheckBox();
-    jCheckBox10 = new javax.swing.JCheckBox();
-    jCheckBox11 = new javax.swing.JCheckBox();
-    jCheckBox12 = new javax.swing.JCheckBox();
-    jCheckBox13 = new javax.swing.JCheckBox();
-    jCheckBox14 = new javax.swing.JCheckBox();
-    jCheckBox15 = new javax.swing.JCheckBox();
-    jCheckBox16 = new javax.swing.JCheckBox();
-    jCheckBox17 = new javax.swing.JCheckBox();
-    jCheckBox18 = new javax.swing.JCheckBox();
-    jCheckBox19 = new javax.swing.JCheckBox();
-    jCheckBox20 = new javax.swing.JCheckBox();
-    jCheckBox21 = new javax.swing.JCheckBox();
-    jCheckBox22 = new javax.swing.JCheckBox();
-    jCheckBox23 = new javax.swing.JCheckBox();
-    jCheckBox24 = new javax.swing.JCheckBox();
-    jCheckBox25 = new javax.swing.JCheckBox();
-    jCheckBox26 = new javax.swing.JCheckBox();
+    aCheckbox = new javax.swing.JCheckBox();
+    eCheckBox = new javax.swing.JCheckBox();
+    mCheckBox = new javax.swing.JCheckBox();
+    iCheckBox = new javax.swing.JCheckBox();
+    uCheckBox = new javax.swing.JCheckBox();
+    qCheckBox = new javax.swing.JCheckBox();
+    bCheckbox = new javax.swing.JCheckBox();
+    fCheckBox = new javax.swing.JCheckBox();
+    jCheckBox = new javax.swing.JCheckBox();
+    nCheckBox = new javax.swing.JCheckBox();
+    rCheckBox = new javax.swing.JCheckBox();
+    vCheckBox = new javax.swing.JCheckBox();
+    cCheckBox = new javax.swing.JCheckBox();
+    gCheckBox = new javax.swing.JCheckBox();
+    kCheckBox = new javax.swing.JCheckBox();
+    oCheckBox = new javax.swing.JCheckBox();
+    sCheckBox = new javax.swing.JCheckBox();
+    wCheckBox = new javax.swing.JCheckBox();
+    dCheckBox = new javax.swing.JCheckBox();
+    hCheckBox = new javax.swing.JCheckBox();
+    lCheckBox = new javax.swing.JCheckBox();
+    pCheckBox = new javax.swing.JCheckBox();
+    tCheckBox = new javax.swing.JCheckBox();
+    xCheckBox = new javax.swing.JCheckBox();
+    yCheckBox = new javax.swing.JCheckBox();
+    zCheckBox = new javax.swing.JCheckBox();
     combinatorAddCourseCombo = new javax.swing.JComboBox<>();
     jButton7 = new javax.swing.JButton();
     jLabel17 = new javax.swing.JLabel();
@@ -123,7 +123,7 @@ public class App extends javax.swing.JFrame {
     jScrollPane9 = new javax.swing.JScrollPane();
     combinatorTimetableTable = new javax.swing.JTable();
     jButton12 = new javax.swing.JButton();
-    jCheckBox27 = new javax.swing.JCheckBox();
+    allCheckBox = new javax.swing.JCheckBox();
     jPanel6 = new javax.swing.JPanel();
     jLabel7 = new javax.swing.JLabel();
     jButton1 = new javax.swing.JButton();
@@ -461,63 +461,63 @@ public class App extends javax.swing.JFrame {
 
     jLabel16.setText("Selection Criteria:");
 
-    jCheckBox1.setText("sectionA");
-    jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+    aCheckbox.setText("sectionA");
+    aCheckbox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jCheckBox1ActionPerformed(evt);
+        aCheckboxActionPerformed(evt);
       }
     });
 
-    jCheckBox2.setText("sectionE");
+    eCheckBox.setText("sectionE");
 
-    jCheckBox3.setText("sectionM");
+    mCheckBox.setText("sectionM");
 
-    jCheckBox4.setText("sectionI");
+    iCheckBox.setText("sectionI");
 
-    jCheckBox5.setText("sectionU");
+    uCheckBox.setText("sectionU");
 
-    jCheckBox6.setText("sectionQ");
+    qCheckBox.setText("sectionQ");
 
-    jCheckBox7.setText("sectionB");
+    bCheckbox.setText("sectionB");
 
-    jCheckBox8.setText("sectionF");
+    fCheckBox.setText("sectionF");
 
-    jCheckBox9.setText("sectionJ");
+    jCheckBox.setText("sectionJ");
 
-    jCheckBox10.setText("sectionN");
+    nCheckBox.setText("sectionN");
 
-    jCheckBox11.setText("sectionR");
-    jCheckBox11.setToolTipText("");
+    rCheckBox.setText("sectionR");
+    rCheckBox.setToolTipText("");
 
-    jCheckBox12.setText("sectionV");
+    vCheckBox.setText("sectionV");
 
-    jCheckBox13.setText("sectionC");
+    cCheckBox.setText("sectionC");
 
-    jCheckBox14.setText("sectionG");
+    gCheckBox.setText("sectionG");
 
-    jCheckBox15.setText("sectionK");
+    kCheckBox.setText("sectionK");
 
-    jCheckBox16.setText("sectionO");
+    oCheckBox.setText("sectionO");
 
-    jCheckBox17.setText("sectionS");
+    sCheckBox.setText("sectionS");
 
-    jCheckBox18.setText("sectionW");
+    wCheckBox.setText("sectionW");
 
-    jCheckBox19.setText("sectionD");
+    dCheckBox.setText("sectionD");
 
-    jCheckBox20.setText("sectionH");
+    hCheckBox.setText("sectionH");
 
-    jCheckBox21.setText("sectionL");
+    lCheckBox.setText("sectionL");
 
-    jCheckBox22.setText("sectionP");
+    pCheckBox.setText("sectionP");
 
-    jCheckBox23.setText("sectionT");
+    tCheckBox.setText("sectionT");
 
-    jCheckBox24.setText("sectionX");
+    xCheckBox.setText("sectionX");
 
-    jCheckBox25.setText("sectionY");
+    yCheckBox.setText("sectionY");
 
-    jCheckBox26.setText("sectionZ");
+    zCheckBox.setText("sectionZ");
 
     combinatorAddCourseCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -577,7 +577,7 @@ public class App extends javax.swing.JFrame {
 
     jButton12.setText("Select");
 
-    jCheckBox27.setText("Select All");
+    allCheckBox.setText("Select All");
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -604,42 +604,42 @@ public class App extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                   .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                      .addComponent(jCheckBox2)
-                      .addComponent(jCheckBox1)
-                      .addComponent(jCheckBox4)
-                      .addComponent(jCheckBox3)
-                      .addComponent(jCheckBox6)
-                      .addComponent(jCheckBox5))
+                      .addComponent(eCheckBox)
+                      .addComponent(aCheckbox)
+                      .addComponent(iCheckBox)
+                      .addComponent(mCheckBox)
+                      .addComponent(qCheckBox)
+                      .addComponent(uCheckBox))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                      .addComponent(jCheckBox8)
-                      .addComponent(jCheckBox7)
-                      .addComponent(jCheckBox9)
-                      .addComponent(jCheckBox10)
-                      .addComponent(jCheckBox11)
-                      .addComponent(jCheckBox12))
+                      .addComponent(fCheckBox)
+                      .addComponent(bCheckbox)
+                      .addComponent(jCheckBox)
+                      .addComponent(nCheckBox)
+                      .addComponent(rCheckBox)
+                      .addComponent(vCheckBox))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                      .addComponent(jCheckBox14)
-                      .addComponent(jCheckBox13)
-                      .addComponent(jCheckBox15)
-                      .addComponent(jCheckBox16)
-                      .addComponent(jCheckBox17)
-                      .addComponent(jCheckBox18)))
+                      .addComponent(gCheckBox)
+                      .addComponent(cCheckBox)
+                      .addComponent(kCheckBox)
+                      .addComponent(oCheckBox)
+                      .addComponent(sCheckBox)
+                      .addComponent(wCheckBox)))
                   .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addComponent(jCheckBox25)
+                    .addComponent(yCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox26)))
+                    .addComponent(zCheckBox)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jCheckBox27, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                  .addComponent(allCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                   .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jCheckBox20, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-                    .addComponent(jCheckBox19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBox21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBox22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBox23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBox24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                    .addComponent(hCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                    .addComponent(dCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(xCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
           .addGroup(jPanel3Layout.createSequentialGroup()
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(jLabel16)
@@ -687,59 +687,59 @@ public class App extends javax.swing.JFrame {
               .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                   .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addComponent(jCheckBox1)
+                    .addComponent(aCheckbox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox2)
+                    .addComponent(eCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox4)
+                    .addComponent(iCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox3)
+                    .addComponent(mCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox6)
+                    .addComponent(qCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox5))
+                    .addComponent(uCheckBox))
                   .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addComponent(jCheckBox7)
+                    .addComponent(bCheckbox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox8)
+                    .addComponent(fCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox9)
+                    .addComponent(jCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox10)
+                    .addComponent(nCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox11)
+                    .addComponent(rCheckBox)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox12)))
+                    .addComponent(vCheckBox)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jCheckBox25)
+                  .addComponent(yCheckBox)
                   .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox26)
-                    .addComponent(jCheckBox27))))
+                    .addComponent(zCheckBox)
+                    .addComponent(allCheckBox))))
               .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jCheckBox13)
+                .addComponent(cCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox14)
+                .addComponent(gCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox15)
+                .addComponent(kCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox16)
+                .addComponent(oCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox17)
+                .addComponent(sCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox18))
+                .addComponent(wCheckBox))
               .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jCheckBox19)
+                .addComponent(dCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox20)
+                .addComponent(hCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox21)
+                .addComponent(lCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox22)
+                .addComponent(pCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox23)
+                .addComponent(tCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox24)))))
+                .addComponent(xCheckBox)))))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jButton5)
@@ -974,9 +974,9 @@ public class App extends javax.swing.JFrame {
 		// TODO add your handling code here:
 	}//GEN-LAST:event_jButton5ActionPerformed
 
-  private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+  private void aCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aCheckboxActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jCheckBox1ActionPerformed
+  }//GEN-LAST:event_aCheckboxActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -1022,14 +1022,24 @@ public class App extends javax.swing.JFrame {
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JCheckBox aCheckbox;
   private javax.swing.JComboBox<String> addCourseCombo;
   private javax.swing.JComboBox<String> addCourseSectionCombo;
+  private javax.swing.JCheckBox allCheckBox;
+  private javax.swing.JCheckBox bCheckbox;
+  private javax.swing.JCheckBox cCheckBox;
   private javax.swing.JComboBox<String> combinatorAddCourseCombo;
   private javax.swing.JTable combinatorCourseTable;
   private javax.swing.JTable combinatorTimetableTable;
+  private javax.swing.JCheckBox dCheckBox;
   private javax.swing.JComboBox<String> deltaACombo;
   private javax.swing.JComboBox<String> deltaBCombo;
   private javax.swing.JTable deltaTable;
+  private javax.swing.JCheckBox eCheckBox;
+  private javax.swing.JCheckBox fCheckBox;
+  private javax.swing.JCheckBox gCheckBox;
+  private javax.swing.JCheckBox hCheckBox;
+  private javax.swing.JCheckBox iCheckBox;
   private javax.swing.JButton jButton1;
   private javax.swing.JButton jButton10;
   private javax.swing.JButton jButton11;
@@ -1042,33 +1052,7 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JButton jButton7;
   private javax.swing.JButton jButton8;
   private javax.swing.JButton jButton9;
-  private javax.swing.JCheckBox jCheckBox1;
-  private javax.swing.JCheckBox jCheckBox10;
-  private javax.swing.JCheckBox jCheckBox11;
-  private javax.swing.JCheckBox jCheckBox12;
-  private javax.swing.JCheckBox jCheckBox13;
-  private javax.swing.JCheckBox jCheckBox14;
-  private javax.swing.JCheckBox jCheckBox15;
-  private javax.swing.JCheckBox jCheckBox16;
-  private javax.swing.JCheckBox jCheckBox17;
-  private javax.swing.JCheckBox jCheckBox18;
-  private javax.swing.JCheckBox jCheckBox19;
-  private javax.swing.JCheckBox jCheckBox2;
-  private javax.swing.JCheckBox jCheckBox20;
-  private javax.swing.JCheckBox jCheckBox21;
-  private javax.swing.JCheckBox jCheckBox22;
-  private javax.swing.JCheckBox jCheckBox23;
-  private javax.swing.JCheckBox jCheckBox24;
-  private javax.swing.JCheckBox jCheckBox25;
-  private javax.swing.JCheckBox jCheckBox26;
-  private javax.swing.JCheckBox jCheckBox27;
-  private javax.swing.JCheckBox jCheckBox3;
-  private javax.swing.JCheckBox jCheckBox4;
-  private javax.swing.JCheckBox jCheckBox5;
-  private javax.swing.JCheckBox jCheckBox6;
-  private javax.swing.JCheckBox jCheckBox7;
-  private javax.swing.JCheckBox jCheckBox8;
-  private javax.swing.JCheckBox jCheckBox9;
+  private javax.swing.JCheckBox jCheckBox;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
@@ -1109,18 +1093,34 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane9;
   private javax.swing.JTextArea jTextArea2;
   private javax.swing.JTextArea jTextArea3;
+  private javax.swing.JCheckBox kCheckBox;
+  private javax.swing.JCheckBox lCheckBox;
+  private javax.swing.JCheckBox mCheckBox;
   private javax.swing.JTable myCoursesTable;
   private javax.swing.JEditorPane myTimetableEditor;
   private javax.swing.JTable myTimetableTable;
+  private javax.swing.JCheckBox nCheckBox;
+  private javax.swing.JCheckBox oCheckBox;
+  private javax.swing.JCheckBox pCheckBox;
+  private javax.swing.JCheckBox qCheckBox;
+  private javax.swing.JCheckBox rCheckBox;
+  private javax.swing.JCheckBox sCheckBox;
   private javax.swing.JSpinner sessionIndexSpinner;
+  private javax.swing.JCheckBox tCheckBox;
   private javax.swing.JTabbedPane tabMain;
   private javax.swing.JTable todoTable;
   private javax.swing.JTextArea todoText;
+  private javax.swing.JCheckBox uCheckBox;
   private javax.swing.JProgressBar updateProgress;
+  private javax.swing.JCheckBox vCheckBox;
   private javax.swing.JTable versionsTable;
+  private javax.swing.JCheckBox wCheckBox;
   private javax.swing.JSpinner weeksSpinner;
   private javax.swing.JSpinner weightConsistencySpinner;
   private javax.swing.JSpinner weightDaySpinner;
   private javax.swing.JSpinner weightGapSpinner;
+  private javax.swing.JCheckBox xCheckBox;
+  private javax.swing.JCheckBox yCheckBox;
+  private javax.swing.JCheckBox zCheckBox;
   // End of variables declaration//GEN-END:variables
 }
