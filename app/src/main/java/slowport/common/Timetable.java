@@ -73,6 +73,9 @@ public class Timetable{
 
 	public Timetable(List<Session> sessions){
 		this.sessions = new ArrayList<>(sessions);
+		this.overlaps = new HashMap<>();
+		this.courses = new ArrayList<>();
+		this.sections = new HashMap<>();
 		sort(this.sessions);
 		findCoursesSections();
 		findOverlaps();
