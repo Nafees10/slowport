@@ -43,4 +43,19 @@ public class SlowApi {
     public static String getMakeupTimetable() {
         
     }
+
+    private static String sendHttpGetRequest(String endpoint) {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(endpoint))
+                .build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Request failed for " + endpoint;
+        }
+    }
 }
