@@ -3,7 +3,7 @@ package slowport.db;
 import java.sql.*;
 
 public class Connector{
-	private static String filename = "~/.local/slowport/db.sqlite";
+	private static String filename = "~/.local/share/slowport/db.sqlite";
 	public static Connection connect(){
 		Connection conn = null;
 		try{
