@@ -2,37 +2,61 @@ package slowport.filter;
 
 import java.util.*;
 import slowport.common.*;
+import slowport.filter.*;
 
 public class Combinator {
-	private Criterion criterion;
+	private Timetable timetable;
 
-	public Combinator(Criterion criterion) {
-		this.criterion = criterion;
+	public Combinator(Timetable timetable) {
+		this.timetable = timetable;
 	}
 
-	public Criterion getCriterion() {
-		return criterion;
+	private List<Timetable> result;
+	private Map<String, Set<String>> sections;
+	private HashMap<String, String> picks;
+
+	private void commit(){
+		List<Session> subTable = new ArrayList<>();
+		for (Session session : timetable.getSessions()){
+			if (!picks.containsKey(session.getName()) ||
+					picks.get(session.getName()) != session.getSection())
+				continue;
+			subTable.add(session);
+		}
+		result.add(new Timetable(subTable));
 	}
 
-	public void setCriterion(Criterion criterion) {
-		this.criterion = criterion;
-	}
-
-	public List<List<Session>> combinations(List<Session> sessions) {
-		List<List<Session>> result = new ArrayList<>();
-		int totalSessions = sessions.size();
-		int totalCombinations = 1 << totalSessions; // 2^totalSessions
-
-		for (int i = 0; i < totalCombinations; i++) {
-			List<Session> currentCombination = new ArrayList<>();
-			for (int j = 0; j < totalSessions; j++) {
-				if ((i & (1 << j)) != 0) {
-					currentCombination.add(sessions.get(j));
+	private void genComb(List<String> courses, int index){
+		if (index >= courses.size())
+			return;
+		boolean isLeaf = index + 1 == courses.size();
+		String course = courses.get(index);
+		for (String section : sections.get(course)){
+			// does it clash?
+			boolean clashes = false;
+			for (String pickedCourse : picks.keySet()){
+				String pickedSection = picks.get(pickedCourse);
+				if (timetable.clashes(pickedCourse, pickedSection, course, section)){
+					clashes = true;
+					break;
 				}
 			}
-			result.add(currentCombination);
+			if (clashes)
+				continue;
+			picks.put(course, section);
+			if (isLeaf)
+				commit();
+			else
+				genComb(courses, index + 1);
+			picks.remove(course);
 		}
+	}
 
-		return result;
+	public List<Timetable> combinations(Map<String, Set<String>> sections) {
+		this.sections = sections;
+		this.result = new ArrayList<>();
+		List<String> courses = new ArrayList<>(sections.keySet());
+		genComb(courses, 0);
+		return this.result;
 	}
 }
