@@ -1280,7 +1280,7 @@ public class App extends javax.swing.JFrame {
 		String vA = (String)deltaACombo.getSelectedItem(),
 					 vB = (String)deltaBCombo.getSelectedItem();
 		if (!timetableDB.getVersions().contains(vA) ||
-				!timetableDB.getVersions().contains(vB)
+				!timetableDB.getVersions().contains(vB))
 				return;
 		List<Session> diff = new ArrayList<>();
 		List<Session>
@@ -1292,6 +1292,18 @@ public class App extends javax.swing.JFrame {
 					continue;
 				diff.add(session);
 			}
+		}
+		DefaultTableModel model =
+			((DefaultTableModel)deltaTable.getModel());
+		model.setRowCount(0);
+		for (Session session : diff){
+			model.addRow(new Object[]{
+				session.getName(),
+				session.getSection(),
+				session.getVenue(),
+				session.getDay().toString(),
+				session.getTime().toString()
+			});
 		}
   }//GEN-LAST:event_deltaBComboActionPerformed
 
