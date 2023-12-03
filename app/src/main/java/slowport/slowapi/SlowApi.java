@@ -7,12 +7,12 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class SlowApi {
-	private final static String apiEndpoint = "https://nafees.digital/slowport/";
+	private final static String apiEndpoint = "http://localhost:8080/slowport";
 
 	public static List<String> getVersions() {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(apiEndpoint + "versions"))
+				.uri(URI.create(apiEndpoint + "versions.txt"))
 				.build();
 		try {
 			HttpResponse<String> response = client.send(request,
@@ -20,17 +20,17 @@ public class SlowApi {
 			return List.of(response.body().split("\n"));
 		} catch (Exception e) {
 			e.printStackTrace();
-			return List.of();
+			return null;
 		}
 	}
 
 	public static String getTimetable(String version) {
-		String endpoint = apiEndpoint + version;
+		String endpoint = apiEndpoint + version + ".txt";
 		return sendHttpGetRequest(endpoint);
 	}
 
 	public static String getMakeupTimetable(String version) {
-		String endpoint = apiEndpoint + version + "-makeup";
+		String endpoint = apiEndpoint + version + "-makeup.txt";
 		return sendHttpGetRequest(endpoint);
 	}
 
@@ -45,7 +45,7 @@ public class SlowApi {
 			return response.body();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "Request failed for " + endpoint;
+			return null;
 		}
 	}
 }
