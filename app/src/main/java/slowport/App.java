@@ -4,6 +4,7 @@
  */
 package slowport;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -70,18 +71,7 @@ public class App extends javax.swing.JFrame {
 		sectionCheckboxes.add(yCheckBox);
 		sectionCheckboxes.add(zCheckBox);
 
-		versions = timetableDB.getVersions();
-		if (versions.size() > 0){
-			selectedVersion = versions.get(versions.size() - 1);
-			timetable = new Timetable(
-					Session.deserializeAll(timetableDB.getTimetable(selectedVersion)));
-			globTimetable = new Timetable(timetable);
-		}else{
-			versions = new ArrayList<>();
-			selectedVersion = null;
-			timetable = null;
-			globTimetable = null;
-		}
+		loadTimetable();
 
 		// run dat updater
 		updaterRun();
@@ -120,9 +110,9 @@ public class App extends javax.swing.JFrame {
 		versions = timetableDB.getVersions();
 		if (versions.size() > 0){
 			selectedVersion = versions.get(versions.size() - 1);
-			timetable = new Timetable(
+			globTimetable = new Timetable(
 					Session.deserializeAll(timetableDB.getTimetable(selectedVersion)));
-			globTimetable = new Timetable(timetable);
+			timetable = new Timetable(selectionDB.getSelected(selectedVersion));
 		}else{
 			versions = new ArrayList<>();
 			selectedVersion = null;
@@ -140,7 +130,6 @@ public class App extends javax.swing.JFrame {
 				((DefaultTableModel)myTimetableTable.getModel());
 			model.setRowCount(0);
 			if (sessions != null){
-				timetable = new Timetable(sessions);
 				// filter by day
 				List<Session> todays = new ArrayList<>();
 				for (Session session : sessions){
@@ -190,12 +179,14 @@ public class App extends javax.swing.JFrame {
 				myTimetableEditor.setContentType("text/html");
 				myTimetableEditor.setText(
 						TableMaker.generate((ArrayList<Session>)sessions));
+				myTimetableEditor.setBackground(Color.WHITE);
 			}
 		}
 
 		// now do My Courses
 		{
 			List<Session> sessions = selectionDB.getSelected(selectedVersion);
+			List<String> globCourses = new ArrayList<>(globTimetable.getCourses());
 			if (sessions != null){
 				Map<Session, List<Note>> notes = new HashMap<>();
 				for (Session session : sessions){
@@ -203,13 +194,23 @@ public class App extends javax.swing.JFrame {
 							noteDB.getNote(session.getName(), session.getSection()));
 				}
 				// TODO handle Todo list
-				DefaultTableModel coursesSection =
-					(DefaultTableModel)myCoursesTable.getModel();
-				coursesSection.setRowCount(0); // YEET
-				for (String course : timetable.getCourses()){
-					for (String section : timetable.getSections(course))
-						coursesSection.addRow(new Object[]{course, section});
-				}
+			}
+			DefaultTableModel coursesSection =
+				(DefaultTableModel)myCoursesTable.getModel();
+			coursesSection.setRowCount(0); // YEET
+			for (String course : timetable.getCourses()){
+				for (String section : timetable.getSections(course))
+					coursesSection.addRow(new Object[]{course, section});
+				if (globCourses.contains(course))
+					globCourses.remove(course);
+			}
+			// populate the add course combo box
+			DefaultComboBoxModel<String> addCourseModel =
+				(DefaultComboBoxModel<String>)addCourseCombo.getModel();
+			addCourseModel.removeAllElements();
+			addCourseModel.addElement("Select Course");
+			for (String course : globCourses){
+				addCourseModel.addElement(course);
 			}
 		}
 	}
@@ -400,6 +401,7 @@ public class App extends javax.swing.JFrame {
     jLabel6.setText("My Timetable");
 
     myTimetableEditor.setEditable(false);
+    myTimetableEditor.setBackground(new java.awt.Color(255, 255, 255));
     jScrollPane12.setViewportView(myTimetableEditor);
 
     javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -460,6 +462,11 @@ public class App extends javax.swing.JFrame {
     jLabel5.setText("Add Course");
 
     addCourseCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Course" }));
+    addCourseCombo.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        addCourseComboActionPerformed(evt);
+      }
+    });
 
     jLabel4.setText("Select Section");
 
@@ -473,6 +480,11 @@ public class App extends javax.swing.JFrame {
     });
 
     jButton4.setText("Add");
+    jButton4.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton4ActionPerformed(evt);
+      }
+    });
 
     todoTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -1157,6 +1169,68 @@ public class App extends javax.swing.JFrame {
   private void aCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aCheckBoxActionPerformed
     // TODO add your handling code here:
   }//GEN-LAST:event_aCheckBoxActionPerformed
+
+  private void addCourseComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCourseComboActionPerformed
+    // TODO add your handling code here:
+		// Course Combo box was selected
+		String course = (String)addCourseCombo.getSelectedItem();
+		// get non-clashing section
+		List<String> sections = new ArrayList<>();
+		if (course != "Select Course" &&
+				globTimetable.getCourses().contains(course)){
+			for (String section : globTimetable.getSections(course)){
+				boolean clashes = false;
+				if (timetable != null){
+					System.out.println("ITS NOT FUCKIN NULL");
+					for (String pickedCourse : timetable.getCourses()){
+						for (String pickedSection : timetable.getSections(pickedCourse)){
+							if (globTimetable.clashes(pickedCourse, pickedSection, course, section)){
+								System.out.println("clashes with " +
+										pickedCourse + " " + pickedSection);
+								clashes = true;
+								break;
+							}else{
+								System.out.println("NO clashes with " +
+										pickedCourse + " " + pickedSection);
+							}
+						}
+						if (clashes)
+							break;
+					}
+				}
+				if (!clashes)
+					sections.add(section);
+			}
+		}
+		DefaultComboBoxModel<String> addSectionModel =
+			(DefaultComboBoxModel<String>)addCourseSectionCombo.getModel();
+		addSectionModel.removeAllElements();
+		addSectionModel.addElement("Select Section");
+		for (String section : sections)
+			addSectionModel.addElement(section);
+  }//GEN-LAST:event_addCourseComboActionPerformed
+
+  private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    // TODO add your handling code here:
+		// Add a course selected
+		String course = (String)addCourseCombo.getSelectedItem(),
+					 section = (String)addCourseSectionCombo.getSelectedItem();
+		if (course == null || section == null ||
+				course == "Select Course" || section == "Select Section")
+			return;
+		selectionDB.addSelected(course, section);
+
+		DefaultComboBoxModel<String> addSectionModel =
+			(DefaultComboBoxModel<String>)addCourseSectionCombo.getModel();
+		addSectionModel.removeAllElements();
+		addSectionModel.addElement("Select Section");
+		DefaultComboBoxModel<String> addCourseModel =
+			(DefaultComboBoxModel<String>)addCourseCombo.getModel();
+		addCourseModel.removeAllElements();
+		addCourseModel.addElement("Select Course");
+
+		loadTimetable();
+  }//GEN-LAST:event_jButton4ActionPerformed
 
 	/**
 	 * @param args the command line arguments

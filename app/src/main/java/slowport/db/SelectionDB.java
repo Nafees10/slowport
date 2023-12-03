@@ -89,10 +89,10 @@ INSERT INTO selections (course, section) VALUES (?, ?);
 		return null;
 	}
 
-	public boolean addSelected(Session session){
+	public boolean addSelected(String course, String section){
 		try{
-			stmntAddSelection.setString(1, session.getName());
-			stmntAddSelection.setString(2, session.getSection());
+			stmntAddSelection.setString(1, course);
+			stmntAddSelection.setString(2, section);
 			return stmntAddSelection.executeUpdate() >= 1;
 		} catch (SQLException e){
 			e.printStackTrace();

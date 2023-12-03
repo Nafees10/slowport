@@ -72,6 +72,13 @@ public class Timetable{
 	}
 
 	public Timetable(List<Session> sessions){
+		if (sessions == null){
+			this.sessions = new ArrayList<>();
+			this.overlaps = new HashMap<>();
+			this.courses = new ArrayList<>();
+			this.sections = new HashMap<>();
+			return;
+		}
 		this.sessions = new ArrayList<>(sessions);
 		this.overlaps = new HashMap<>();
 		this.courses = new ArrayList<>();
@@ -82,6 +89,13 @@ public class Timetable{
 	}
 
 	public Timetable(Timetable timetable){
+		if (timetable == null){
+			this.sessions = new ArrayList<>();
+			this.overlaps = new HashMap<>();
+			this.courses = new ArrayList<>();
+			this.sections = new HashMap<>();
+			return;
+		}
 		this.sessions = new ArrayList<>(timetable.sessions);
 		this.overlaps = new HashMap<>(timetable.overlaps);
 		this.courses = new ArrayList<>(timetable.courses);

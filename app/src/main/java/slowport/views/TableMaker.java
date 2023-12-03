@@ -8,7 +8,8 @@ public class TableMaker{
 	private static String style="""
 <!-- Stolen from https://github.com/Nafees10/slowtable -->
 <style>
-table{border-collapse:collapse;text-align:center;width:100%;}
+table{border-collapse:collapse;text-align:center;width:100%;
+background-color:#FFFFFF;color:#000000;}
 table td, table th{border:1px solid black;}
 table tr:first-child th{border-top:0;}
 table tr:last-child td{border-bottom:0;}
