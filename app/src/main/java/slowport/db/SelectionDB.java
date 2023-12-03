@@ -54,19 +54,19 @@ INSERT INTO selections (course, section) VALUES (?, ?);
 			TimetableDB timetableStore) throws DBException{
 		this.timetableStore = timetableStore;
 		try{
+			Statement stmnt = conn.createStatement();
+			stmnt.executeUpdate(queryCreateTable);
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+
+		try{
 			stmntGetSelections = conn.prepareStatement(queryGetSelections);
 			stmntRemoveSelection = conn.prepareStatement(queryRemoveSelection);
 			stmntAddSelection = conn.prepareStatement(queryAddSelection);
 		} catch (SQLException e){
 			e.printStackTrace();
 			throw new DBException();
-		}
-
-		try{
-			Statement stmnt = conn.createStatement();
-			stmnt.executeUpdate(queryCreateTable);
-		} catch (SQLException e){
-			e.printStackTrace();
 		}
 	}
 

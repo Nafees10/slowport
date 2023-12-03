@@ -7,7 +7,7 @@ import slowport.common.*;
 public class NoteDB{
 	private static final String queryCreateTable =
 """
-CREATE TABLE IF NOT EXISTS selections(
+CREATE TABLE IF NOT EXISTS notes(
 		week VARCHAR(255) NOT NULL,
 		course VARCHAR(255) NOT NULL,
 		section VARCHAR(255) NOT NULL,
@@ -61,6 +61,13 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 
 	public NoteDB(Connection conn) throws DBException{
 		try{
+			Statement stmnt = conn.createStatement();
+			stmnt.executeUpdate(queryCreateTable);
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+
+		try{
 			stmntGetNotes = conn.prepareStatement(queryGetNotes);
 			stmntGetNotesByCourse = conn.prepareStatement(queryGetNotesByCourse);
 			stmntAddNote = conn.prepareStatement(queryAddNote);
@@ -68,13 +75,6 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 		} catch (SQLException e){
 			e.printStackTrace();
 			throw new DBException();
-		}
-
-		try{
-			Statement stmnt = conn.createStatement();
-			stmnt.executeUpdate(queryCreateTable);
-		} catch (SQLException e){
-			e.printStackTrace();
 		}
 	}
 

@@ -33,19 +33,19 @@ INSERT INTO timetables (version, timetable) VALUES (?, ?);
 
 	public TimetableDB(Connection conn) throws DBException{
 		try{
+			Statement stmnt = conn.createStatement();
+			stmnt.executeUpdate(queryCreateTable);
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+
+		try{
 			stmntGetVersions = conn.prepareStatement(queryGetVersions);
 			stmntGetTimetable = conn.prepareStatement(queryGetTimetable);
 			stmntAddTimetable = conn.prepareStatement(queryAddTimetable);
 		} catch (SQLException e){
 			e.printStackTrace();
 			throw new DBException();
-		}
-
-		try{
-			Statement stmnt = conn.createStatement();
-			stmnt.executeUpdate(queryCreateTable);
-		} catch (SQLException e){
-			e.printStackTrace();
 		}
 	}
 
