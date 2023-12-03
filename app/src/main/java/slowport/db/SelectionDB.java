@@ -100,10 +100,10 @@ INSERT INTO selections (course, section) VALUES (?, ?);
 		return false;
 	}
 
-	public boolean removeSelected(Session session){
+	public boolean removeSelected(String course, String section){
 		try{
-			stmntRemoveSelection.setString(1, session.getName());
-			stmntRemoveSelection.setString(2, session.getSection());
+			stmntRemoveSelection.setString(1, course);
+			stmntRemoveSelection.setString(2, section);
 			return stmntRemoveSelection.executeUpdate() >= 1;
 		} catch (SQLException e){
 			e.printStackTrace();

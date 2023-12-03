@@ -85,6 +85,7 @@ public class App extends javax.swing.JFrame {
 	private void updaterRun(){
 		updateInProgress = true;
 		updateProgress.setIndeterminate(true);
+		updateBtn.setEnabled(false);
 		Thread dhaga = new Thread(new Updater());
 		dhaga.run();
 		new Timer(500, new ActionListener() {
@@ -93,6 +94,7 @@ public class App extends javax.swing.JFrame {
 					return; // its STILL going?
 				((Timer)e.getSource()).stop(); // stop bothering me man, he's done
 				// do the stuff that's done after timetable update
+				updateBtn.setEnabled(true);
 				loadTimetable();
 				updateProgress.setIndeterminate(false);
 			}
@@ -213,6 +215,15 @@ public class App extends javax.swing.JFrame {
 				addCourseModel.addElement(course);
 			}
 		}
+
+		// now do updates
+		{
+			DefaultTableModel model =
+				((DefaultTableModel)versionsTable.getModel());
+			model.setRowCount(0);
+			for (String version : timetableDB.getVersions())
+				model.addRow(new Object[]{version});
+		}
 	}
 
 	/**
@@ -307,7 +318,7 @@ public class App extends javax.swing.JFrame {
     allCheckBox = new javax.swing.JCheckBox();
     jPanel6 = new javax.swing.JPanel();
     jLabel7 = new javax.swing.JLabel();
-    jButton1 = new javax.swing.JButton();
+    updateBtn = new javax.swing.JButton();
     updateProgress = new javax.swing.JProgressBar();
     deltaACombo = new javax.swing.JComboBox<>();
     deltaBCombo = new javax.swing.JComboBox<>();
@@ -509,6 +520,7 @@ public class App extends javax.swing.JFrame {
         return canEdit [columnIndex];
       }
     });
+    todoTable.setEnabled(false);
     todoTable.getTableHeader().setResizingAllowed(false);
     todoTable.getTableHeader().setReorderingAllowed(false);
     jScrollPane6.setViewportView(todoTable);
@@ -516,19 +528,24 @@ public class App extends javax.swing.JFrame {
     todoText.setColumns(20);
     todoText.setRows(5);
     todoText.setToolTipText("ToDo Text");
+    todoText.setEnabled(false);
     jScrollPane7.setViewportView(todoText);
 
     jLabel13.setText("Weeks From Now:");
 
     weeksSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+    weeksSpinner.setEnabled(false);
 
     jLabel14.setText("n-th class of Week:");
 
     sessionIndexSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+    sessionIndexSpinner.setEnabled(false);
 
     jButton2.setText("Add");
+    jButton2.setEnabled(false);
 
     jButton6.setText("Drop Selected Todo");
+    jButton6.setEnabled(false);
 
     jLabel15.setText("Add Todo:");
 
@@ -968,10 +985,10 @@ public class App extends javax.swing.JFrame {
     jLabel7.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
     jLabel7.setText("Updates");
 
-    jButton1.setText("Check for Updates");
-    jButton1.addActionListener(new java.awt.event.ActionListener() {
+    updateBtn.setText("Check for Updates");
+    updateBtn.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton1ActionPerformed(evt);
+        updateBtnActionPerformed(evt);
       }
     });
 
@@ -1051,7 +1068,7 @@ public class App extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(updateProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGap(18, 18, 18)
-            .addComponent(jButton1))
+            .addComponent(updateBtn))
           .addGroup(jPanel6Layout.createSequentialGroup()
             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(18, 18, 18)
@@ -1076,7 +1093,7 @@ public class App extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
           .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(updateBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(updateProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1156,11 +1173,23 @@ public class App extends javax.swing.JFrame {
 
 	private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 		// TODO add your handling code here:
+		// drop a course clicked
+		int rowInd = myCoursesTable.getSelectedRow();
+		if (rowInd == -1)
+			return;
+		String course = (String)myCoursesTable.getValueAt(rowInd, 0),
+					 section = (String)myCoursesTable.getValueAt(rowInd, 1);
+		selectionDB.removeSelected(course, section);
+		DefaultTableModel model =
+			((DefaultTableModel)myCoursesTable.getModel());
+		model.removeRow(rowInd);
 	}//GEN-LAST:event_jButton3ActionPerformed
 
-	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+	private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
 		// TODO add your handling code here:
-	}//GEN-LAST:event_jButton1ActionPerformed
+		// Check for Updates pressed
+		updaterRun();
+	}//GEN-LAST:event_updateBtnActionPerformed
 
 	private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 		// TODO add your handling code here:
@@ -1348,7 +1377,6 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JCheckBox gCheckBox;
   private javax.swing.JCheckBox hCheckBox;
   private javax.swing.JCheckBox iCheckBox;
-  private javax.swing.JButton jButton1;
   private javax.swing.JButton jButton10;
   private javax.swing.JButton jButton11;
   private javax.swing.JButton jButton12;
@@ -1419,6 +1447,7 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JTable todoTable;
   private javax.swing.JTextArea todoText;
   private javax.swing.JCheckBox uCheckBox;
+  private javax.swing.JButton updateBtn;
   private javax.swing.JProgressBar updateProgress;
   private javax.swing.JCheckBox vCheckBox;
   private javax.swing.JTable versionsTable;
