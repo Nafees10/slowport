@@ -43,7 +43,7 @@ This application is designed to help students find the best timetable from the o
    ```
 
 ## License
-This is the property of the Contributers and no one can use it without their permission.
+For license information. Please consult to the license.md file.
 
 ## Contributors
 - Nafees Hassan
