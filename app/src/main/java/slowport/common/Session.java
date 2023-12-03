@@ -197,8 +197,6 @@ public class Session {
 			duration.equals(other.duration) &&
 			name.equals(other.name) &&
 			section.equals(other.section) &&
-			venue.equals(other.venue) &&
-			recurring == other.recurring &&
-			week.equals(other.week);
+			venue.equals(other.venue);
 	}
 }

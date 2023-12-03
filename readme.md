@@ -1,54 +1,27 @@
-## Slow Port Desktop Application
+# SlowPort
 
-## Description
-This desktop application is a term project for the Software Construction and Development (SCD) course at FAST NUCES. It is developed by Nafees Hassan, Usman Amjad, Abdul Mannan and Kashif Raza. This is best application to help students to find best timetable for themselves.
-## Table of Contents
-- [How to Build](#how-to-build)
-- [Usage](#usage)
-- [License](#license)
-- [Contributors](#contributors)
+SlowPort is a Desktop Application for optimization of timetables.
 
-## How to Build
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/slow-port.git
-   ```
+It was made for use by FAST NUCES students during registration period, to help
+them find the best timetable according to their needs.
 
-2. **Navigate to the project directory:**
-   ```bash
-   cd slow-port
-   ```
 
-3. **Run the project:**
-   ```bash
-   ./gradlew run
-   ```
+## Building
 
-4. **Build the JAR file:**
-   ```bash
-   ./gradlew shadowJar
-   ```
+You need the following tools to build:
 
-   The JAR file will be generated in the `build/libs` directory.
+* git
+* gradle
+* JDK (Java 17 minimum)
 
-## Usage
-This application is designed to help students find the best timetable from the offered courses in different sections. 
+Run the following commands one after another:
 
-### User Instructions
-1. After building the project, navigate to the `build/libs` directory.
-2. Locate the generated JAR file, which may have a name like `slow-port-1.0-all.jar`.
-3. Run the application using the following command:
-   ```bash
-   java -jar slow-port-1.0-all.jar
-   ```
+```bash
+git clone https://github.com/Nafees10/slowport
+cd slowport
+gradle wrapper
+./gradlew build
+./gradlew shadowJar
+```
 
-## License
-For license information. Please consult to the license.md file.
-
-## Contributors
-- Nafees Hassan
-- Usman Amjad
-- Abdul Mannan
-- Kashif Raza
-
-This desktop application is the property of the contributors and is part of the Software Construction and Development course at FAST NUCES.
+Running above will fetch all the required dependencies and build the JAR file.

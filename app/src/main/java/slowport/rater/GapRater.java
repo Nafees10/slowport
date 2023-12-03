@@ -22,7 +22,7 @@ public class GapRater extends Rater{
 			for (int i = 1; i < sessions.size(); i ++){
 				Session curr = sessions.get(i);
 				if (curr.getTime().isAfter(prev.getTime()))
-					gaps += time - curr.getTime().toSecondOfDay();
+					gaps += curr.getTime().toSecondOfDay() - time;
 				time = curr.getTime().toSecondOfDay() +
 					curr.getDuration().toSeconds();
 			}

@@ -43,6 +43,8 @@ public class App extends javax.swing.JFrame {
 			System.out.println("DAMNIT! freaking database!");
 			System.exit(69);
 		}
+		combinatorSelections = new HashMap<>();
+
 		sectionCheckboxes = new ArrayList<>();
 		sectionCheckboxes.add(aCheckBox);
 		sectionCheckboxes.add(bCheckBox);
@@ -82,6 +84,20 @@ public class App extends javax.swing.JFrame {
 		});
 	}
 
+	private static void openTTView(String tt) {
+		JFrame messageBoxFrame = new JFrame("Graphical Timetable");
+		messageBoxFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		JEditorPane editorPane = new JEditorPane();
+		editorPane.setContentType("text/html");
+		editorPane.setEditable(false);
+		editorPane.setText(tt);
+		JScrollPane scrollPane = new JScrollPane(editorPane);
+		messageBoxFrame.getContentPane().add(scrollPane);
+		messageBoxFrame.setSize(1280, 700);
+		messageBoxFrame.setLocationRelativeTo(null);
+		messageBoxFrame.setVisible(true);
+	}
+
 	private void updaterRun(){
 		updateInProgress = true;
 		updateProgress.setIndeterminate(true);
@@ -99,6 +115,40 @@ public class App extends javax.swing.JFrame {
 				updateProgress.setIndeterminate(false);
 			}
 		}).start();
+	}
+
+	private void loadCombinatorTT(){
+		System.out.println("trying index = " + combinatorIndex);
+		if (combinatorIndex <= 0)
+			jButton9.setEnabled(false);
+		else
+			jButton9.setEnabled(true);
+		if (combinatorResult == null ||
+				combinatorIndex >= combinatorResult.size())
+			jButton10.setEnabled(false);
+		else
+			jButton10.setEnabled(true);
+		if (combinatorResult == null)
+			return;
+		DefaultTableModel model =
+			((DefaultTableModel)combinatorTimetableTable.getModel());
+		model.setRowCount(0); // YEET
+		if (combinatorIndex < 0 || combinatorIndex >= combinatorResult.size())
+			return;
+		Timetable tt = combinatorResult.get(combinatorIndex);
+		jLabel21.setText("Score: " + combinatorScore.get(combinatorIndex));
+		System.out.println("WOT");
+		System.out.println("\t" + tt.getSessions().size());
+		for (Session session : tt.getSessions()){
+			model.addRow(new Object[]{
+				session.getDay().toString(),
+				session.getTime().toString(),
+				session.getTime().plusMinutes(session.getDuration().toMinutes()).
+					toString(),
+				session.getName(),
+				session.getSection()
+			});
+		}
 	}
 
 	private void loadTimetable(){
@@ -141,22 +191,11 @@ public class App extends javax.swing.JFrame {
 				List<String> todo = new ArrayList<>();
 				YearWeek week = YearWeek.fromToday();
 				for (Session session : sessions){
-					List<Note> notes = noteDB.getNote(session.getName(),
-							session.getSection());
-					boolean added = false;
-					for (Note note : notes){
-						if (note.getWeek().equals(week) &&
-								note.getSessionIndex() == session.getIndex()){
-							todo.add(note.getNote());
-							added = true;
-							break;
-						}
-						// yeet older stuff
-						if (note.getWeek().isBefore(week))
-							noteDB.removeNote(note); // later looser
-					}
-					if (!added)
+					Note note = noteDB.getNote(session.getName(), session.getSection());
+					if (note == null)
 						todo.add("");
+					else
+						todo.add(note.getNote());
 				}
 				// shove those new rows in
 				for (int i = 0; i < todays.size(); i ++){
@@ -187,16 +226,7 @@ public class App extends javax.swing.JFrame {
 
 		// now do My Courses
 		{
-			List<Session> sessions = selectionDB.getSelected(selectedVersion);
 			List<String> globCourses = new ArrayList<>(globTimetable.getCourses());
-			if (sessions != null){
-				Map<Session, List<Note>> notes = new HashMap<>();
-				for (Session session : sessions){
-					notes.put(session,
-							noteDB.getNote(session.getName(), session.getSection()));
-				}
-				// TODO handle Todo list
-			}
 			DefaultTableModel coursesSection =
 				(DefaultTableModel)myCoursesTable.getModel();
 			coursesSection.setRowCount(0); // YEET
@@ -214,6 +244,16 @@ public class App extends javax.swing.JFrame {
 			for (String course : globCourses){
 				addCourseModel.addElement(course);
 			}
+		}
+
+		// poor combinator
+		{
+			DefaultComboBoxModel<String> model =
+				(DefaultComboBoxModel<String>)combinatorAddCourseCombo.getModel();
+			model.removeAllElements();
+			model.addElement("Select Course");
+			for (String course : globTimetable.getCourses())
+				model.addElement(course);
 		}
 
 		// now do updates
@@ -263,17 +303,10 @@ public class App extends javax.swing.JFrame {
     addCourseSectionCombo = new javax.swing.JComboBox<>();
     jButton3 = new javax.swing.JButton();
     jButton4 = new javax.swing.JButton();
-    jScrollPane6 = new javax.swing.JScrollPane();
-    todoTable = new javax.swing.JTable();
     jScrollPane7 = new javax.swing.JScrollPane();
     todoText = new javax.swing.JTextArea();
-    jLabel13 = new javax.swing.JLabel();
-    weeksSpinner = new javax.swing.JSpinner();
-    jLabel14 = new javax.swing.JLabel();
-    sessionIndexSpinner = new javax.swing.JSpinner();
     jButton2 = new javax.swing.JButton();
-    jButton6 = new javax.swing.JButton();
-    jLabel15 = new javax.swing.JLabel();
+    jLabel8 = new javax.swing.JLabel();
     jPanel3 = new javax.swing.JPanel();
     jLabel9 = new javax.swing.JLabel();
     jScrollPane8 = new javax.swing.JScrollPane();
@@ -324,6 +357,7 @@ public class App extends javax.swing.JFrame {
     combinatorTimetableTable = new javax.swing.JTable();
     jButton12 = new javax.swing.JButton();
     allCheckBox = new javax.swing.JCheckBox();
+    combinatorBar = new javax.swing.JProgressBar();
     jPanel6 = new javax.swing.JPanel();
     jLabel7 = new javax.swing.JLabel();
     updateBtn = new javax.swing.JButton();
@@ -473,6 +507,11 @@ public class App extends javax.swing.JFrame {
     });
     myCoursesTable.getTableHeader().setResizingAllowed(false);
     myCoursesTable.getTableHeader().setReorderingAllowed(false);
+    myCoursesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        myCoursesTableMouseClicked(evt);
+      }
+    });
     jScrollPane2.setViewportView(myCoursesTable);
 
     jLabel3.setFont(new java.awt.Font("sansserif", 0, 24)); // NOI18N
@@ -505,57 +544,19 @@ public class App extends javax.swing.JFrame {
       }
     });
 
-    todoTable.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][] {
-
-      },
-      new String [] {
-        "Date", "ToDo"
-      }
-    ) {
-      Class[] types = new Class [] {
-        java.lang.String.class, java.lang.String.class
-      };
-      boolean[] canEdit = new boolean [] {
-        false, false
-      };
-
-      public Class getColumnClass(int columnIndex) {
-        return types [columnIndex];
-      }
-
-      public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return canEdit [columnIndex];
-      }
-    });
-    todoTable.setEnabled(false);
-    todoTable.getTableHeader().setResizingAllowed(false);
-    todoTable.getTableHeader().setReorderingAllowed(false);
-    jScrollPane6.setViewportView(todoTable);
-
     todoText.setColumns(20);
     todoText.setRows(5);
     todoText.setToolTipText("ToDo Text");
-    todoText.setEnabled(false);
     jScrollPane7.setViewportView(todoText);
 
-    jLabel13.setText("Weeks From Now:");
+    jButton2.setText("Add/Update Todo");
+    jButton2.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton2ActionPerformed(evt);
+      }
+    });
 
-    weeksSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-    weeksSpinner.setEnabled(false);
-
-    jLabel14.setText("n-th class of Week:");
-
-    sessionIndexSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
-    sessionIndexSpinner.setEnabled(false);
-
-    jButton2.setText("Add");
-    jButton2.setEnabled(false);
-
-    jButton6.setText("Drop Selected Todo");
-    jButton6.setEnabled(false);
-
-    jLabel15.setText("Add Todo:");
+    jLabel8.setText("Todo for Selected Course:");
 
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
@@ -571,59 +572,41 @@ public class App extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addCourseSectionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE))
               .addComponent(jLabel3))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(89, 89, 89)
+                .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE))
+              .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8))))
           .addGroup(jPanel2Layout.createSequentialGroup()
             .addComponent(jLabel5)
             .addGap(25, 25, 25)
             .addComponent(addCourseCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
           .addGroup(jPanel2Layout.createSequentialGroup()
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-              .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
-              .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-            .addGap(18, 18, 18)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jScrollPane6)
-              .addComponent(jScrollPane7)
-              .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel15)
-                .addGap(0, 0, Short.MAX_VALUE))
-              .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(weeksSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sessionIndexSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+              .addComponent(jScrollPane2)
+              .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(18, 18, 18)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+              .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+              .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         .addContainerGap())
     );
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel2Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabel3)
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel3)
+          .addComponent(jLabel8))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
-          .addGroup(jPanel2Layout.createSequentialGroup()
-            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton6)
-            .addGap(18, 18, 18)
-            .addComponent(jLabel15)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jScrollPane7)))
+          .addComponent(jScrollPane7)
+          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jButton3)
-          .addComponent(jLabel13)
-          .addComponent(weeksSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel14)
-          .addComponent(sessionIndexSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButton2))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -737,8 +720,18 @@ public class App extends javax.swing.JFrame {
     zCheckBox.setText("sectionZ");
 
     combinatorAddCourseCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Course" }));
+    combinatorAddCourseCombo.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        combinatorAddCourseComboActionPerformed(evt);
+      }
+    });
 
     jButton7.setText("Add Course");
+    jButton7.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton7ActionPerformed(evt);
+      }
+    });
 
     jLabel17.setText("Weightage for Consistency:");
 
@@ -753,16 +746,36 @@ public class App extends javax.swing.JFrame {
     weightDaySpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
 
     jButton8.setText("Generate");
+    jButton8.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton8ActionPerformed(evt);
+      }
+    });
 
     jLabel20.setText("Generated Timetable (lower score is better):");
 
     jLabel21.setText("Score:");
 
     jButton9.setText("Previous Best");
+    jButton9.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton9ActionPerformed(evt);
+      }
+    });
 
     jButton10.setText("Next Best");
+    jButton10.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton10ActionPerformed(evt);
+      }
+    });
 
     jButton11.setText("Graphical View");
+    jButton11.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton11ActionPerformed(evt);
+      }
+    });
 
     combinatorTimetableTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -795,6 +808,11 @@ public class App extends javax.swing.JFrame {
     jButton12.setText("Select");
 
     allCheckBox.setText("Select All");
+    allCheckBox.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        allCheckBoxActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -805,9 +823,6 @@ public class App extends javax.swing.JFrame {
         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel3Layout.createSequentialGroup()
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabel9)
-                .addGap(0, 348, Short.MAX_VALUE))
               .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
               .addComponent(jScrollPane8))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -882,14 +897,20 @@ public class App extends javax.swing.JFrame {
               .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
               .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jScrollPane9)))
+            .addComponent(jScrollPane9))
+          .addGroup(jPanel3Layout.createSequentialGroup()
+            .addComponent(jLabel9)
+            .addGap(18, 18, 18)
+            .addComponent(combinatorBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         .addContainerGap())
     );
     jPanel3Layout.setVerticalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabel9)
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(jLabel9)
+          .addComponent(combinatorBar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jLabel16)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1001,6 +1022,11 @@ public class App extends javax.swing.JFrame {
     });
 
     deltaACombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Version" }));
+    deltaACombo.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        deltaAComboActionPerformed(evt);
+      }
+    });
 
     deltaBCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Version" }));
     deltaBCombo.addActionListener(new java.awt.event.ActionListener() {
@@ -1014,14 +1040,14 @@ public class App extends javax.swing.JFrame {
 
       },
       new String [] {
-        "Course", "Section", "New Venue", "New Time"
+        "Course", "Section", "New Day", "New Venue", "New Time"
       }
     ) {
       Class[] types = new Class [] {
-        java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+        java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class
       };
       boolean[] canEdit = new boolean [] {
-        false, false, false, false
+        false, false, true, false, false
       };
 
       public Class getColumnClass(int columnIndex) {
@@ -1206,6 +1232,18 @@ public class App extends javax.swing.JFrame {
 
 	private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 		// TODO add your handling code here:
+		// remove selection from combinator
+		int index = combinatorCourseTable.getSelectedRow();
+		if (index < 0)
+			return;
+		DefaultTableModel model =
+			(DefaultTableModel)combinatorCourseTable.getModel();
+		String course = (String)model.getValueAt(index, 0);
+		if (course == null)
+			return;
+		if (combinatorSelections.containsKey(course))
+			combinatorSelections.remove(course);
+		model.removeRow(index);
 	}//GEN-LAST:event_jButton5ActionPerformed
 
   private void aCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aCheckBoxActionPerformed
@@ -1223,17 +1261,12 @@ public class App extends javax.swing.JFrame {
 			for (String section : globTimetable.getSections(course)){
 				boolean clashes = false;
 				if (timetable != null){
-					System.out.println("ITS NOT FUCKIN NULL");
 					for (String pickedCourse : timetable.getCourses()){
 						for (String pickedSection : timetable.getSections(pickedCourse)){
 							if (globTimetable.clashes(pickedCourse, pickedSection, course, section)){
-								System.out.println("clashes with " +
-										pickedCourse + " " + pickedSection);
 								clashes = true;
 								break;
 							}else{
-								System.out.println("NO clashes with " +
-										pickedCourse + " " + pickedSection);
 							}
 						}
 						if (clashes)
@@ -1287,11 +1320,15 @@ public class App extends javax.swing.JFrame {
 			before = timetableDB.getSessions(vA),
 			after = timetableDB.getSessions(vB);
 		for (Session session : after){
+			boolean found = false;
 			for (Session orig : before){
-				if (orig.equals(session))
-					continue;
-				diff.add(session);
+				if (orig.equals(session)){
+					found = true;
+					break;
+				}
 			}
+			if (!found)
+				diff.add(session);
 		}
 		DefaultTableModel model =
 			((DefaultTableModel)deltaTable.getModel());
@@ -1306,6 +1343,190 @@ public class App extends javax.swing.JFrame {
 			});
 		}
   }//GEN-LAST:event_deltaBComboActionPerformed
+
+  private void myCoursesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myCoursesTableMouseClicked
+    // TODO add your handling code here:
+		// course section selected in my courses
+		int ind = myCoursesTable.getSelectedRow();
+		todoText.setText("");
+		if (ind < 0)
+			return;
+		String course = (String)myCoursesTable.getValueAt(ind, 0),
+					 section = (String)myCoursesTable.getValueAt(ind, 1);
+
+		Note note = noteDB.getNote(course, section);
+		if (note == null)
+			return;
+		todoText.setText(note.getNote());
+  }//GEN-LAST:event_myCoursesTableMouseClicked
+
+  private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+		// time to add or update Todo
+		int ind = myCoursesTable.getSelectedRow();
+		if (ind < 0)
+			return;
+		String course = (String)myCoursesTable.getValueAt(ind, 0),
+					 section = (String)myCoursesTable.getValueAt(ind, 1);
+
+		Note note = noteDB.getNote(course, section);
+		if (note != null)
+			noteDB.removeNote(course, section);
+		note = new Note(course, section, todoText.getText());
+		noteDB.addNote(note);
+		loadTimetable();
+  }//GEN-LAST:event_jButton2ActionPerformed
+
+  private void deltaAComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deltaAComboActionPerformed
+// time to figure out diff
+		String vA = (String)deltaACombo.getSelectedItem(),
+					 vB = (String)deltaBCombo.getSelectedItem();
+		if (!timetableDB.getVersions().contains(vA) ||
+				!timetableDB.getVersions().contains(vB))
+				return;
+		List<Session> diff = new ArrayList<>();
+		List<Session>
+			before = timetableDB.getSessions(vA),
+			after = timetableDB.getSessions(vB);
+		for (Session session : after){
+			boolean found = false;
+			for (Session orig : before){
+				if (orig.equals(session)){
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				diff.add(session);
+		}
+		DefaultTableModel model =
+			((DefaultTableModel)deltaTable.getModel());
+		model.setRowCount(0);
+		for (Session session : diff){
+			model.addRow(new Object[]{
+				session.getName(),
+				session.getSection(),
+				session.getVenue(),
+				session.getDay().toString(),
+				session.getTime().toString()
+			});
+		}
+		// TODO add your handling code here:
+  }//GEN-LAST:event_deltaAComboActionPerformed
+
+  private void combinatorAddCourseComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combinatorAddCourseComboActionPerformed
+		for (JCheckBox box : sectionCheckboxes){
+			box.setEnabled(false);
+			box.setSelected(false);
+			box.setVisible(false);
+		}
+		String course = (String)combinatorAddCourseCombo.getSelectedItem();
+		if (course == null || course == "Select Course" ||
+				!globTimetable.getCourses().contains(course))
+			return;
+		int counter = 0;
+		for (String section : globTimetable.getSections(course)){
+			if (counter >= sectionCheckboxes.size())
+				break;
+			JCheckBox box = sectionCheckboxes.get(counter);
+			box.setText(section);
+			box.setVisible(true);
+			box.setSelected(false);
+			box.setEnabled(true);
+			counter ++;
+		}
+  }//GEN-LAST:event_combinatorAddCourseComboActionPerformed
+
+  private void allCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allCheckBoxActionPerformed
+		for (JCheckBox box : sectionCheckboxes){
+			if (!box.isEnabled())
+				continue;
+			if (allCheckBox.isSelected())
+				box.setSelected(true);
+			else
+				box.setSelected(false);
+		}
+  }//GEN-LAST:event_allCheckBoxActionPerformed
+
+  private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+		// add this course to selection for combinator
+		String course = (String)combinatorAddCourseCombo.getSelectedItem();
+		if (!globTimetable.getCourses().contains(course))
+			return;
+		DefaultTableModel model =
+			(DefaultTableModel)combinatorCourseTable.getModel();
+		if (combinatorSelections.containsKey(course)){
+			combinatorSelections.remove(course);
+			for (int i = 0; i < model.getRowCount(); i ++){
+				if (model.getValueAt(i, 0).equals(course)){
+					model.removeRow(i);
+					break;
+				}
+			}
+		}
+		Set<String> sections = new HashSet<>();
+		String secStr = "";
+		for (JCheckBox box : sectionCheckboxes){
+			if (box.isEnabled() && box.isSelected()){
+				if (secStr == "")
+					secStr = box.getText();
+				else
+					secStr = secStr + ", " + box.getText();
+				sections.add(box.getText());
+			}
+		}
+		if (sections.size() == 0)
+			return;
+		combinatorSelections.put(course, sections);
+		model.addRow(new Object[]{course, secStr});
+  }//GEN-LAST:event_jButton7ActionPerformed
+
+  private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+		// time to run THE COMBINATOR (tm)
+		jButton8.setEnabled(false);
+		combinatorBar.setIndeterminate(true);
+		Thread dhaga = new Thread(
+				new Combinatorer(
+					combinatorSelections,
+					(Integer)weightGapSpinner.getModel().getValue(),
+					(Integer)weightConsistencySpinner.getModel().getValue(),
+					(Integer)weightDaySpinner.getModel().getValue()
+					)
+				);
+		dhaga.start();
+		new Timer(500, new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				if (combinatorInProgress)
+					return; // THE COMBINATOR (tm) is too damn slow!
+				((Timer)e.getSource()).stop(); // stop bothering me man, he's done
+				jButton8.setEnabled(true);
+				combinatorBar.setIndeterminate(false);
+				combinatorIndex = 0;
+				loadCombinatorTT();
+			}
+		}).start();
+  }//GEN-LAST:event_jButton8ActionPerformed
+
+  private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+		if (combinatorIndex <= 0)
+			return;
+		combinatorIndex --;
+		loadCombinatorTT();
+  }//GEN-LAST:event_jButton9ActionPerformed
+
+  private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+		if (combinatorResult == null || combinatorIndex >= combinatorResult.size())
+			return;
+		combinatorIndex ++;
+		loadCombinatorTT();
+  }//GEN-LAST:event_jButton10ActionPerformed
+
+  private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+		if (combinatorResult == null || combinatorIndex < 0 ||
+				combinatorIndex >= combinatorResult.size())
+			return;
+		openTTView(TableMaker.generate((ArrayList<Session>)
+					combinatorResult.get(combinatorIndex).getSessions()));
+  }//GEN-LAST:event_jButton11ActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -1357,12 +1578,13 @@ public class App extends javax.swing.JFrame {
 	private List<JCheckBox> sectionCheckboxes;
 
 	private boolean updateInProgress = false;
-	private Map<String, String> updatedTimetables;
-	private List<String> updatedVersions;
-	private boolean updated = false;
 
 	private boolean combinatorInProgress = false;
 	private List<Timetable> combinatorResult;
+	private List<Integer> combinatorScore;
+	private int combinatorIndex = 0;
+
+	private Map<String, Set<String>> combinatorSelections;
 
 	private class Updater implements Runnable{
 		public void run(){
@@ -1386,7 +1608,6 @@ public class App extends javax.swing.JFrame {
 				if (tt != null)
 					timetableDB.addTimetable(remoteVersion + "-makeup", tt);
 				selectedVersion = remoteVersion;
-				updated = true;
 			}
 			updateInProgress = false;
 		}
@@ -1394,12 +1615,54 @@ public class App extends javax.swing.JFrame {
 
 	private class Combinatorer implements Runnable{
 		private Map<String, Set<String>> sections;
-		public Combinatorer(Map<String, Set<String>> sections){
+		private int gapWeight, consistencyWeight, dayWeight;
+		public Combinatorer(Map<String, Set<String>> sections,
+				int gapWeight, int consistencyWeight, int dayWeight){
 			this.sections = sections;
+			this.gapWeight = gapWeight;
+			this.consistencyWeight = consistencyWeight;
+			this.dayWeight = dayWeight;
 		}
 		public void run(){
-			Combinator daCombinator = new Combinator(timetable);
+			combinatorIndex = 0;
+			Combinator daCombinator = new Combinator(globTimetable);
 			combinatorResult = daCombinator.combinations(sections);
+			ComboRater rater;
+			GapRater gapper = new GapRater();
+			ConsistencyRater consistenter = new ConsistencyRater();
+			DayRater dayer = new DayRater();
+			try{
+				rater = new ComboRater(
+						Arrays.asList(gapper, consistenter, dayer),
+						Arrays.asList(gapWeight, consistencyWeight, dayWeight));
+			} catch (Exception e){
+				// fuck off and dont come back here
+				e.printStackTrace();
+				combinatorResult = new ArrayList<>();
+				combinatorInProgress = false;
+				return;
+			}
+
+			List<Integer> scores = new ArrayList<>(combinatorResult.size());
+			for (int i = 0; i < combinatorResult.size(); i ++)
+				scores.add(rater.rate(combinatorResult.get(i)));
+			// now sort this crap
+			boolean repeat = true;
+			while (repeat){
+				repeat = false;
+				for (int i = 1; i < scores.size(); i ++){
+					if (scores.get(i - 1) > scores.get(i)){
+						int temp = scores.get(i);
+						scores.set(i, scores.get(i - 1));
+						scores.set(i - 1, temp);
+						Timetable tt = combinatorResult.get(i);
+						combinatorResult.set(i, combinatorResult.get(i - 1));
+						combinatorResult.set(i - 1, tt);
+						repeat = true;
+					}
+				}
+			}
+			combinatorScore = scores;
 			combinatorInProgress = false;
 		}
 	}
@@ -1412,6 +1675,7 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JCheckBox bCheckBox;
   private javax.swing.JCheckBox cCheckBox;
   private javax.swing.JComboBox<String> combinatorAddCourseCombo;
+  private javax.swing.JProgressBar combinatorBar;
   private javax.swing.JTable combinatorCourseTable;
   private javax.swing.JTable combinatorTimetableTable;
   private javax.swing.JCheckBox dCheckBox;
@@ -1430,7 +1694,6 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JButton jButton3;
   private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
-  private javax.swing.JButton jButton6;
   private javax.swing.JButton jButton7;
   private javax.swing.JButton jButton8;
   private javax.swing.JButton jButton9;
@@ -1439,9 +1702,6 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
   private javax.swing.JLabel jLabel12;
-  private javax.swing.JLabel jLabel13;
-  private javax.swing.JLabel jLabel14;
-  private javax.swing.JLabel jLabel15;
   private javax.swing.JLabel jLabel16;
   private javax.swing.JLabel jLabel17;
   private javax.swing.JLabel jLabel18;
@@ -1455,6 +1715,7 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
   private javax.swing.JLabel jLabel7;
+  private javax.swing.JLabel jLabel8;
   private javax.swing.JLabel jLabel9;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
@@ -1469,7 +1730,6 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JScrollPane jScrollPane4;
   private javax.swing.JScrollPane jScrollPane5;
-  private javax.swing.JScrollPane jScrollPane6;
   private javax.swing.JScrollPane jScrollPane7;
   private javax.swing.JScrollPane jScrollPane8;
   private javax.swing.JScrollPane jScrollPane9;
@@ -1487,10 +1747,8 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JCheckBox qCheckBox;
   private javax.swing.JCheckBox rCheckBox;
   private javax.swing.JCheckBox sCheckBox;
-  private javax.swing.JSpinner sessionIndexSpinner;
   private javax.swing.JCheckBox tCheckBox;
   private javax.swing.JTabbedPane tabMain;
-  private javax.swing.JTable todoTable;
   private javax.swing.JTextArea todoText;
   private javax.swing.JCheckBox uCheckBox;
   private javax.swing.JButton updateBtn;
@@ -1498,7 +1756,6 @@ public class App extends javax.swing.JFrame {
   private javax.swing.JCheckBox vCheckBox;
   private javax.swing.JTable versionsTable;
   private javax.swing.JCheckBox wCheckBox;
-  private javax.swing.JSpinner weeksSpinner;
   private javax.swing.JSpinner weightConsistencySpinner;
   private javax.swing.JSpinner weightDaySpinner;
   private javax.swing.JSpinner weightGapSpinner;

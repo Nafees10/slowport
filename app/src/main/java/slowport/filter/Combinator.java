@@ -18,12 +18,14 @@ public class Combinator {
 	private void commit(){
 		List<Session> subTable = new ArrayList<>();
 		for (Session session : timetable.getSessions()){
-			if (!picks.containsKey(session.getName()) ||
-					picks.get(session.getName()) != session.getSection())
-				continue;
-			subTable.add(session);
+			if (picks.containsKey(session.getName()) &&
+					picks.get(session.getName()).equals(session.getSection())){
+				subTable.add(session);
+				System.out.println("picked " + session.toString());
+			}
 		}
 		result.add(new Timetable(subTable));
+		System.out.println("\nadios\n");
 	}
 
 	private void genComb(List<String> courses, int index){
@@ -55,6 +57,7 @@ public class Combinator {
 	public List<Timetable> combinations(Map<String, Set<String>> sections) {
 		this.sections = sections;
 		this.result = new ArrayList<>();
+		this.picks = new HashMap<>();
 		List<String> courses = new ArrayList<>(sections.keySet());
 		genComb(courses, 0);
 		return this.result;

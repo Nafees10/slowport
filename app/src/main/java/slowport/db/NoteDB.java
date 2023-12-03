@@ -8,34 +8,30 @@ public class NoteDB{
 	private static final String queryCreateTable =
 """
 CREATE TABLE IF NOT EXISTS notes(
-		week VARCHAR(255) NOT NULL,
 		course VARCHAR(255) NOT NULL,
 		section VARCHAR(255) NOT NULL,
-		sessionIndex INTEGER,
 		note TEXT,
-		PRIMARY KEY (week, course, section, sessionIndex));
+		PRIMARY KEY (course, section));
 """;
 
 	private static final String queryGetNotes =
 """
-SELECT week, course, section, sessionIndex, note FROM notes;
+SELECT course, section, note FROM notes;
 """;
 
 	private static final String queryGetNotesByCourse =
 """
-SELECT week, course, section, sessionIndex, note FROM notes
-WHERE course=? AND section=?;
+SELECT course, section, note FROM notes WHERE course=? AND section=?;
 """;
 
 	private static final String queryAddNote =
 """
-INSERT INTO notes (week, course, section, sessionIndex, note) VALUES
-(?, ?, ?, ?, ?);
+INSERT INTO notes (course, section, note) VALUES (?, ?, ?);
 """;
 
 	private static final String queryRemoveNote =
 """
-DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
+DELETE FROM notes WHERE course=? AND section=?;
 """;
 
 	private PreparedStatement stmntGetNotes, stmntGetNotesByCourse, stmntAddNote,
@@ -46,12 +42,7 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 			if (!res.next())
 				return null;
 			Note note = new Note(
-					new YearWeek(res.getString(1)),
-					res.getString(2),
-					res.getString(3),
-					res.getInt(4),
-					res.getString(5)
-					);
+					res.getString(1), res.getString(2), res.getString(3));
 			return note;
 		} catch (Exception e){
 			e.printStackTrace();
@@ -95,19 +86,12 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 		return null;
 	}
 
-	public List<Note> getNote(String course, String section){
+	public Note getNote(String course, String section){
 		try{
 			stmntGetNotesByCourse.setString(1, course);
 			stmntGetNotesByCourse.setString(2, section);
 			ResultSet res = stmntGetNotesByCourse.executeQuery();
-			List<Note> ret = new ArrayList<>();
-			while (true){
-				Note note = create(res);
-				if (note == null)
-					break;
-				ret.add(note);
-			}
-			return ret;
+			return create(res);
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
@@ -116,11 +100,9 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 
 	public boolean addNote(Note note){
 		try{
-			stmntAddNote.setString(1, note.getWeek().toString());
-			stmntAddNote.setString(2, note.getCourse());
-			stmntAddNote.setString(3, note.getSection());
-			stmntAddNote.setInt(4, note.getSessionIndex());
-			stmntAddNote.setString(5, note.getNote());
+			stmntAddNote.setString(1, note.getCourse());
+			stmntAddNote.setString(2, note.getSection());
+			stmntAddNote.setString(3, note.getNote());
 			return stmntAddNote.executeUpdate() >= 1;
 		} catch (SQLException e){
 			e.printStackTrace();
@@ -128,12 +110,10 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 		return false;
 	}
 
-	public boolean removeNote(Note note){
+	public boolean removeNote(String course, String section){
 		try{
-			stmntRemoveNote.setString(1, note.getWeek().toString());
-			stmntRemoveNote.setString(2, note.getCourse());
-			stmntRemoveNote.setString(3, note.getSection());
-			stmntRemoveNote.setInt(4, note.getSessionIndex());
+			stmntRemoveNote.setString(1, course);
+			stmntRemoveNote.setString(2, section);
 			return stmntRemoveNote.executeUpdate() >= 1;
 		} catch (SQLException e){
 			e.printStackTrace();
