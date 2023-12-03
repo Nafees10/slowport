@@ -64,8 +64,11 @@ public class App extends javax.swing.JFrame {
 		sectionCheckboxes.add(zCheckBox);
 
 		// disabled pieces of shits
-		for (JCheckBox box : sectionCheckboxes)
+		for (JCheckBox box : sectionCheckboxes){
 			box.setEnabled(false);
+			box.setSelected(false);
+			box.setVisible(false);
+		}
 	}
 
 	/**
@@ -1056,6 +1059,12 @@ public class App extends javax.swing.JFrame {
 
 	private List<JCheckBox> sectionCheckboxes;
 
+	private boolean updateInProgress = false;
+	private Map<String, String> updatedTimetables;
+	private List<String> updatedVersions;
+
+	private boolean combinatorInProgress = false;
+	private List<List<Session>> combinatorResult;
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JCheckBox aCheckBox;
