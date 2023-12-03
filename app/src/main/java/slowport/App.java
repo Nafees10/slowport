@@ -4,16 +4,22 @@
  */
 package slowport;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.Timer;
+import javax.swing.table.*;
 
 import slowport.db.*;
 import slowport.common.*;
 import slowport.rater.*;
 import slowport.slowapi.*;
 import slowport.filter.*;
+import slowport.views.*;
 
 /**
  *
@@ -64,6 +70,46 @@ public class App extends javax.swing.JFrame {
 		sectionCheckboxes.add(yCheckBox);
 		sectionCheckboxes.add(zCheckBox);
 
+		versions = timetableDB.getVersions();
+		if (versions.size() > 0){
+			selectedVersion = versions.get(versions.size() - 1);
+			timetable = new Timetable(
+					Session.deserializeAll(timetableDB.getTimetable(selectedVersion)));
+			globTimetable = new Timetable(timetable);
+		}else{
+			versions = new ArrayList<>();
+			selectedVersion = null;
+			timetable = null;
+			globTimetable = null;
+		}
+
+		// run dat updater
+		updaterRun();
+		new Timer(5 * 60 * 1000, new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				updaterRun();
+			}
+		});
+	}
+
+	private void updaterRun(){
+		updateInProgress = true;
+		updateProgress.setIndeterminate(true);
+		Thread dhaga = new Thread(new Updater());
+		dhaga.run();
+		new Timer(500, new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				if (updateInProgress)
+					return; // its STILL going?
+				((Timer)e.getSource()).stop(); // stop bothering me man, he's done
+				// do the stuff that's done after timetable update
+				loadTimetable();
+				updateProgress.setIndeterminate(false);
+			}
+		}).start();
+	}
+
+	private void loadTimetable(){
 		// disabled pieces of shits
 		for (JCheckBox box : sectionCheckboxes){
 			box.setEnabled(false);
@@ -71,23 +117,101 @@ public class App extends javax.swing.JFrame {
 			box.setVisible(false);
 		}
 
-		// load that fat fuck data from database
 		versions = timetableDB.getVersions();
 		if (versions.size() > 0){
 			selectedVersion = versions.get(versions.size() - 1);
 			timetable = new Timetable(
 					Session.deserializeAll(timetableDB.getTimetable(selectedVersion)));
+			globTimetable = new Timetable(timetable);
 		}else{
-			versions = null;
+			versions = new ArrayList<>();
 			selectedVersion = null;
 			timetable = null;
+			globTimetable = null;
 		}
 
-		// run dat updater
-		updateInProgress = true;
-		updateProgress.setIndeterminate(true);
-		Thread dhaga = new Thread(new Updater());
-		dhaga.run();
+		// load today's classes
+		if (selectedVersion == null)
+			return;
+		{
+			List<Session> sessions = selectionDB.getSelected(selectedVersion);
+			// yeet those rows
+			DefaultTableModel model =
+				((DefaultTableModel)myTimetableTable.getModel());
+			model.setRowCount(0);
+			if (sessions != null){
+				timetable = new Timetable(sessions);
+				// filter by day
+				List<Session> todays = new ArrayList<>();
+				for (Session session : sessions){
+					if (session.getDay().equals(LocalDate.now().getDayOfWeek()))
+						todays.add(session);
+				}
+				List<String> todo = new ArrayList<>();
+				YearWeek week = YearWeek.fromToday();
+				for (Session session : sessions){
+					List<Note> notes = noteDB.getNote(session.getName(),
+							session.getSection());
+					boolean added = false;
+					for (Note note : notes){
+						if (note.getWeek().equals(week) &&
+								note.getSessionIndex() == session.getIndex()){
+							todo.add(note.getNote());
+							added = true;
+							break;
+						}
+						// yeet older stuff
+						if (note.getWeek().isBefore(week))
+							noteDB.removeNote(note); // later looser
+					}
+					if (!added)
+						todo.add("");
+				}
+				// shove those new rows in
+				for (int i = 0; i < todays.size(); i ++){
+					Session session = todays.get(i);
+					String note = todo.get(i);
+					model.addRow(new Object[]{
+						session.getTime().toString(),
+							session.getName() + " " + session.getSection(),
+							session.getVenue(),
+							note
+					});
+				}
+			}
+		}
+
+		// now do myTimetableEditor
+		{
+			List<Session> sessions = selectionDB.getSelected(selectedVersion);
+			if (sessions == null){
+				myTimetableEditor.setText("");
+			}else{
+				myTimetableEditor.setContentType("text/html");
+				myTimetableEditor.setText(
+						TableMaker.generate((ArrayList<Session>)sessions));
+			}
+		}
+
+		// now do My Courses
+		{
+			List<Session> sessions = selectionDB.getSelected(selectedVersion);
+			if (sessions != null){
+				Map<Session, List<Note>> notes = new HashMap<>();
+				for (Session session : sessions){
+					notes.put(session,
+							noteDB.getNote(session.getName(), session.getSection()));
+				}
+				// TODO handle Todo list
+				DefaultTableModel coursesSection =
+					(DefaultTableModel)myCoursesTable.getModel();
+				coursesSection.setRowCount(0); // YEET
+				for (String course : timetable.getCourses()){
+					for (String section : timetable.getSections(course))
+						coursesSection.addRow(new Object[]{course, section});
+				}
+			}
+		}
 	}
 
 	/**
@@ -1076,6 +1200,7 @@ public class App extends javax.swing.JFrame {
 	private NoteDB noteDB;
 	private TimetableDB timetableDB;
 
+	private Timetable globTimetable;
 	private Timetable timetable;
 	private List<String> versions;
 	private String selectedVersion;

@@ -7,7 +7,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class SlowApi {
-	private final static String apiEndpoint = "http://localhost:8080/slowport";
+	private final static String apiEndpoint = "http://localhost:8080/slowport/";
 
 	public static List<String> getVersions() {
 		HttpClient client = HttpClient.newHttpClient();
@@ -37,15 +37,19 @@ public class SlowApi {
 	private static String sendHttpGetRequest(String endpoint) {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(endpoint))
-				.build();
+			.uri(URI.create(endpoint))
+			.build();
 		try {
 			HttpResponse<String> response = client.send(request,
 					HttpResponse.BodyHandlers.ofString());
-			return response.body();
+			int statusCode = response.statusCode();
+			if (statusCode >= 200 && statusCode < 300)
+				return response.body();
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
+
 }
