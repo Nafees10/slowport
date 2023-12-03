@@ -67,7 +67,8 @@ tr:nth-child(even){background-color:#f2f2f2;}
 		return map;
 	}
 
-	private static String generateHeaderDayVenue(LocalTime timeMin, LocalTime timeMax){
+	private static String generateHeaderDayVenue(LocalTime timeMin,
+			LocalTime timeMax){
 		String ret = "<tr><th rowspan=2>Day</th><th rowspan=2>Venue</th>";
 		for (int hour = timeMin.getHour(); hour <= timeMax.getHour(); hour ++)
 			ret += "<th colspan=6>" + hour + "</th>";
@@ -78,7 +79,8 @@ tr:nth-child(even){background-color:#f2f2f2;}
 		return ret + "</tr>";
 	}
 
-	private static String generateHeaderDay(LocalTime timeMin, LocalTime timeMax){
+	private static String generateHeaderDay(LocalTime timeMin,
+			LocalTime timeMax){
 		String ret = "<tr><th rowspan=2>Day</th>";
 		for (int hour = timeMin.getHour(); hour <= timeMax.getHour(); hour ++)
 			ret += "<th colspan=6>" + hour + "</th>";
@@ -134,8 +136,10 @@ tr:nth-child(even){background-color:#f2f2f2;}
 			ArrayList<Session> daySessions = map.get(day.toString());
 			if (daySessions == null || daySessions.size() == 0)
 				continue;
-			HashMap<String, ArrayList<Session>> dayMap = separateByVenue(daySessions);
-			ret += "<tr><th rowspan=" + dayMap.size() + ">" + day.toString() + "</th>";
+			HashMap<String, ArrayList<Session>> dayMap =
+				separateByVenue(daySessions);
+			ret += "<tr><th rowspan=" + dayMap.size() + ">" + day.toString() +
+				"</th>";
 			for (Map.Entry<String, ArrayList<Session>> entry : dayMap.entrySet()){
 				ArrayList<Session> vSessions = entry.getValue();
 				String venue = entry.getKey();
