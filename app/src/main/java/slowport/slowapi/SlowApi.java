@@ -36,8 +36,10 @@ public class SlowApi {
 
     // Method to get timetable for a specific version
     public static String getTimetable(String version) {
-       
+        String endpoint = apiEndpoint + "/timetable/" + version;
+        return sendHttpGetRequest(endpoint);
     }
+
 
     // Method to get makeup timetable
     public static String getMakeupTimetable() {
