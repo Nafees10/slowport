@@ -4,9 +4,16 @@ import java.util.*;
 import java.sql.*;
 import slowport.common.*;
 import slowport.filter.*;
-import slowport.db.*;
 
 public class SelectionDB{
+	private static final String queryCreateTable =
+"""
+CREATE TABLE IF NOT EXISTS selections(
+		course VARCHAR(255) NOT NULL,
+		section VARCHAR(255) NOT NULL,
+		PRIMARY KEY (course, section));
+""";
+
 	private static final String queryGetSelections =
 """
 SELECT course, section FROM selections;
@@ -53,6 +60,13 @@ INSERT INTO selections (course, section) VALUES (?, ?);
 		} catch (SQLException e){
 			e.printStackTrace();
 			throw new DBException();
+		}
+
+		try{
+			Statement stmnt = conn.createStatement();
+			stmnt.executeUpdate(queryCreateTable);
+		} catch (SQLException e){
+			e.printStackTrace();
 		}
 	}
 

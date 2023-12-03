@@ -5,6 +5,14 @@ import java.util.*;
 import slowport.common.*;
 
 public class TimetableDB{
+	private static final String queryCreateTable =
+"""
+CREATE TABLE IF NOT EXISTS timetables(
+		version VARCHAR(255),
+		timetable TEXT,
+		PRIMARY KEY (version));
+""";
+
 	private static final String queryGetVersions =
 """
 SELECT DISTINCT version FROM timetables;
@@ -31,6 +39,13 @@ INSERT INTO timetables (version, timetable) VALUES (?, ?);
 		} catch (SQLException e){
 			e.printStackTrace();
 			throw new DBException();
+		}
+
+		try{
+			Statement stmnt = conn.createStatement();
+			stmnt.executeUpdate(queryCreateTable);
+		} catch (SQLException e){
+			e.printStackTrace();
 		}
 	}
 

@@ -5,6 +5,17 @@ import java.util.*;
 import slowport.common.*;
 
 public class NoteDB{
+	private static final String queryCreateTable =
+"""
+CREATE TABLE IF NOT EXISTS selections(
+		week VARCHAR(255) NOT NULL,
+		course VARCHAR(255) NOT NULL,
+		section VARCHAR(255) NOT NULL,
+		sessionIndex INTEGER,
+		note TEXT,
+		PRIMARY KEY (week, course, section, sessionIndex));
+""";
+
 	private static final String queryGetNotes =
 """
 SELECT week, course, section, sessionIndex, note FROM notes;
@@ -57,6 +68,13 @@ DELETE FROM notes WHERE week=? AND course=? AND section=? AND sessionIndex=?;
 		} catch (SQLException e){
 			e.printStackTrace();
 			throw new DBException();
+		}
+
+		try{
+			Statement stmnt = conn.createStatement();
+			stmnt.executeUpdate(queryCreateTable);
+		} catch (SQLException e){
+			e.printStackTrace();
 		}
 	}
 
