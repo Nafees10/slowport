@@ -43,9 +43,10 @@ public class SlowApi {
 
     // Method to get makeup timetable
     public static String getMakeupTimetable() {
-        
+        String endpoint = apiEndpoint + "/makeup-timetable";
+        return sendHttpGetRequest(endpoint);
     }
-
+    //Method to fetch the data body present at that specific endpoint.
     private static String sendHttpGetRequest(String endpoint) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
