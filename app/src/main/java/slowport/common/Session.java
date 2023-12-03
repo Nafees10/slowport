@@ -185,4 +185,20 @@ public class Session {
 	public YearWeek getWeek() {
 		return week;
 	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		Session other = (Session) obj;
+		return day == other.day &&
+			time.equals(other.time) &&
+			duration.equals(other.duration) &&
+			name.equals(other.name) &&
+			section.equals(other.section) &&
+			venue.equals(other.venue) &&
+			recurring == other.recurring &&
+			week.equals(other.week);
+	}
 }

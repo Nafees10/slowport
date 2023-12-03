@@ -221,8 +221,16 @@ public class App extends javax.swing.JFrame {
 			DefaultTableModel model =
 				((DefaultTableModel)versionsTable.getModel());
 			model.setRowCount(0);
-			for (String version : timetableDB.getVersions())
+			DefaultComboBoxModel<String>
+				modelA = (DefaultComboBoxModel<String>)deltaACombo.getModel(),
+							 modelB = (DefaultComboBoxModel<String>)deltaBCombo.getModel();
+			modelA.removeAllElements();
+			modelB.removeAllElements();
+			for (String version : timetableDB.getVersions()){
 				model.addRow(new Object[]{version});
+				modelA.addElement(version);
+				modelB.addElement(version);
+			}
 		}
 	}
 
@@ -995,6 +1003,11 @@ public class App extends javax.swing.JFrame {
     deltaACombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Version" }));
 
     deltaBCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Version" }));
+    deltaBCombo.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        deltaBComboActionPerformed(evt);
+      }
+    });
 
     deltaTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -1260,6 +1273,27 @@ public class App extends javax.swing.JFrame {
 
 		loadTimetable();
   }//GEN-LAST:event_jButton4ActionPerformed
+
+  private void deltaBComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deltaBComboActionPerformed
+    // TODO add your handling code here:
+		// time to figure out diff
+		String vA = (String)deltaACombo.getSelectedItem(),
+					 vB = (String)deltaBCombo.getSelectedItem();
+		if (!timetableDB.getVersions().contains(vA) ||
+				!timetableDB.getVersions().contains(vB)
+				return;
+		List<Session> diff = new ArrayList<>();
+		List<Session>
+			before = timetableDB.getSessions(vA),
+			after = timetableDB.getSessions(vB);
+		for (Session session : after){
+			for (Session orig : before){
+				if (orig.equals(session))
+					continue;
+				diff.add(session);
+			}
+		}
+  }//GEN-LAST:event_deltaBComboActionPerformed
 
 	/**
 	 * @param args the command line arguments
