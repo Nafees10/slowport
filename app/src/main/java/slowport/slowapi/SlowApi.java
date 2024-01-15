@@ -7,7 +7,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class SlowApi {
-	private final static String apiEndpoint = "http://localhost:8080/slowport/";
+	private final static String apiEndpoint = "https://nafees.digital/slowport/";
 
 	public static List<String> getVersions() {
 		HttpClient client = HttpClient.newHttpClient();
