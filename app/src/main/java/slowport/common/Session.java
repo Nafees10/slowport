@@ -118,7 +118,7 @@ public class Session {
 		for (String line : lines){
 			Session session = Session.deserialize(line);
 			if (session == null)
-				return null;
+				continue;
 			String key = session.getName() + "\t" + session.getSection();
 			if (counts.containsKey(key)){
 				session.index = counts.get(key);
@@ -137,7 +137,7 @@ public class Session {
 		for (String line : lines){
 			Session session = Session.deserializeMakeup(line);
 			if (session == null)
-				return null;
+				continue;
 			ret.add(session);
 		}
 		return ret;
